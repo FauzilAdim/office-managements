@@ -250,17 +250,6 @@
                 </svg>
             </a>
 
-            <!-- Icon 3: Chat / Messages -->
-            <button 
-                type="button" 
-                @click="showToast('Fitur pesan instan siap digunakan')"
-                title="Pesan & Diskusi" 
-                class="w-10 h-10 rounded-full text-slate-400 hover:text-zinc-900 hover:bg-white/80 flex items-center justify-center transition-all cursor-pointer"
-            >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-            </button>
 
             <!-- Icon 4: Calendar / Schedule -->
             <button 
@@ -287,67 +276,7 @@
         </main>
     </div>
 
-    <!-- 3. FLOATING VIDEO CALL CONTROL BAR (Bottom Right - Glass look) -->
-    <div x-show="callActive" x-cloak class="fixed bottom-6 right-6 z-40 bg-white/85 backdrop-blur-xl border border-white/80 rounded-full p-2 px-3 flex items-center gap-2.5 shadow-xl shadow-slate-300/40">
-        <!-- Active Meeting Camera Icon with green pulse -->
-        <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-md relative shrink-0">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-            </svg>
-            <span class="w-2 h-2 rounded-full bg-emerald-400 absolute top-0.5 right-0.5 animate-ping"></span>
-        </div>
 
-        <!-- Video Camera Toggle Button -->
-        <button 
-            type="button" 
-            @click="camDisabled = !camDisabled; showToast(camDisabled ? 'Kamera dimatikan' : 'Kamera diaktifkan')"
-            :class="camDisabled ? 'bg-rose-100 text-rose-700 border border-rose-300' : 'bg-slate-100/90 text-slate-700 hover:bg-slate-200'"
-            class="w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-            title="Toggle Kamera"
-        >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-        </button>
-
-        <!-- Mic Toggle Button -->
-        <button 
-            type="button" 
-            @click="micMuted = !micMuted; showToast(micMuted ? 'Mikrofon dibisukan' : 'Mikrofon aktif')"
-            :class="micMuted ? 'bg-rose-100 text-rose-700 border border-rose-300' : 'bg-slate-100/90 text-slate-700 hover:bg-slate-200'"
-            class="w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-            title="Toggle Mikrofon"
-        >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-            </svg>
-        </button>
-
-        <!-- Speaker Toggle Button -->
-        <button 
-            type="button" 
-            @click="speakerMuted = !speakerMuted; showToast(speakerMuted ? 'Speaker dibisukan' : 'Speaker aktif')"
-            :class="speakerMuted ? 'bg-rose-100 text-rose-700 border border-rose-300' : 'bg-slate-100/90 text-slate-700 hover:bg-slate-200'"
-            class="w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-            title="Toggle Audio"
-        >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-            </svg>
-        </button>
-
-        <!-- Red End Call Button (Merah: Danger / End) -->
-        <button 
-            type="button" 
-            @click="callActive = false; showToast('Panggilan Zoom Meeting diakhiri')"
-            class="w-9 h-9 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-md active:scale-95 transition-all cursor-pointer"
-            title="Akhiri Panggilan"
-        >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" class="rotate-[135deg] origin-center" />
-            </svg>
-        </button>
-    </div>
 
     <!-- Quick Role Switcher Modal -->
     <div x-show="quickSwitchOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">

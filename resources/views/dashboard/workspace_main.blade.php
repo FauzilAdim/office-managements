@@ -301,6 +301,91 @@
 
             return matchesCat && matchesSearch;
         });
+    },
+    chatPanelOpen: false,
+    chatMaximized: false,
+    chatActiveEmployee: null,
+    chatInputMessage: '',
+    chatSearch: '',
+    chatConversations: {
+        2: [
+            { sender: 'other', text: 'Halo mas Fauzil, webhook Midtrans QRIS & BCA Virtual Account sudah selesai di-testing di sandbox.', time: '14:20' },
+            { sender: 'me', text: 'Mantap Fikri, coba cek idempotency key nya ya biar ga double charge saat network timeout.', time: '14:22' },
+            { sender: 'other', text: 'Siap mas, sudah dihandle pakai Redis lock dengan TTL 10 detik. Tinggal review PR.', time: '14:25' }
+        ],
+        3: [
+            { sender: 'other', text: 'Pest regression suite sudah selesai di branch test/payroll. Semua 40 tests lolos.', time: '13:45' },
+            { sender: 'me', text: 'Keren! Boleh minta tolong trigger ke CI pipeline staging sekarang?', time: '13:50' },
+            { sender: 'other', text: 'Sedang berjalan di GitHub Actions mas, estimasi 5 menit lagi selesai.', time: '13:52' }
+        ],
+        4: [
+            { sender: 'other', text: 'Fauzil, nanti jam 15:30 ada sync arsitektur SSO multi-cabang ya di Zoom.', time: '11:15' },
+            { sender: 'me', text: 'Siap pak Hendra, dokumen RFC dan diagram OAuth2 sudah saya siapkan.', time: '11:20' }
+        ],
+        6: [
+            { sender: 'other', text: 'PR refactor auth gateway sudah di-assign ke saya mas. Sore ini saya review komplit.', time: '10:05' },
+            { sender: 'me', text: 'Thanks mas Reza! Prioritas aman sebelum release ke staging besok.', time: '10:10' }
+        ]
+    },
+    openChatWith(emp) {
+        this.chatActiveEmployee = emp;
+        this.chatPanelOpen = true;
+        if (!this.chatConversations[emp.id]) {
+            this.chatConversations[emp.id] = [
+                { sender: 'other', text: 'Halo! Saya sedang mengerjakan: ' + emp.current_activity + '. Ada yang perlu dikoordinasikan?', time: 'Baru saja' }
+            ];
+        }
+        this.$nextTick(() => {
+            this.scrollToChatBottom();
+            const input = document.getElementById('chatInputField');
+            if (input) input.focus();
+        });
+    },
+    sendChatMessage() {
+        if (!this.chatInputMessage.trim() || !this.chatActiveEmployee) return;
+        const text = this.chatInputMessage.trim();
+        const empId = this.chatActiveEmployee.id;
+        if (!this.chatConversations[empId]) {
+            this.chatConversations[empId] = [];
+        }
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        this.chatConversations[empId].push({
+            sender: 'me',
+            text: text,
+            time: timeStr
+        });
+        this.chatInputMessage = '';
+        this.$nextTick(() => {
+            this.scrollToChatBottom();
+        });
+        
+        setTimeout(() => {
+            if (this.chatConversations[empId]) {
+                const replies = [
+                    'Siap mas, segera saya tindak lanjuti!',
+                    'Noted mas, terima kasih arahannya. Segera saya update statusnya.',
+                    'Baik mas, nanti saya kabari lagi begitu ada progres.'
+                ];
+                const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                const replyNow = new Date();
+                const replyTime = String(replyNow.getHours()).padStart(2, '0') + ':' + String(replyNow.getMinutes()).padStart(2, '0');
+                this.chatConversations[empId].push({
+                    sender: 'other',
+                    text: randomReply,
+                    time: replyTime
+                });
+                this.$nextTick(() => {
+                    this.scrollToChatBottom();
+                });
+            }
+        }, 1100);
+    },
+    scrollToChatBottom() {
+        const container = document.getElementById('chatMessagesContainer');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
     }
 }">
 
@@ -488,9 +573,9 @@
             <template x-for="emp in filteredEmployees()" :key="emp.id">
                 <div class="relative flex flex-col group transition-all duration-200 hover:-translate-y-1">
                     <!-- Top Step Row: Left Profile Tab (Avatar + Name & Role) + Fillet + Recessed Action Notch -->
-                    <div class="flex items-end relative z-10">
-                        <!-- Elevated Profile Tab: Translucent Glass Surface -->
-                        <div class="bg-white/80 backdrop-blur-xl pt-3 pl-3.5 pr-4 pb-2.5 rounded-tl-[24px] rounded-tr-[20px] flex items-center gap-3 flex-1 min-w-0 shadow-xs border-t border-l border-r border-white/80">
+                    <div class="flex items-end relative z-10 -mb-px">
+                        <!-- Elevated Profile Tab: Translucent Glass Surface (No bottom border, no shadow-xs) -->
+                        <div class="bg-white/80 backdrop-blur-xl pt-3 pl-3.5 pr-4 pb-3 rounded-tl-[24px] rounded-tr-[20px] flex items-center gap-3 flex-1 min-w-0 border-t border-l border-white/80 border-b-0">
                             <!-- Avatar with Live Online Indicator -->
                             <div class="relative shrink-0">
                                 <img :src="emp.avatar" :alt="emp.name" class="w-11 h-11 rounded-full object-cover ring-2 ring-white/90" loading="lazy">
@@ -509,17 +594,18 @@
                         </div>
 
                         <!-- Inverted Concave Fillet Curve (Smooth Matching Glass Fillet) -->
-                        <div class="w-[20px] h-[20px] text-white/80 shrink-0 self-end -ml-px">
-                            <svg viewBox="0 0 20 20" class="w-full h-full fill-current">
+                        <div class="w-[20px] h-[20px] text-white/80 shrink-0 self-end -ml-px relative z-10 pointer-events-none">
+                            <svg viewBox="0 0 20 20" class="w-full h-full fill-current overflow-visible">
                                 <path d="M 0 0 C 0 11.046 8.954 20 20 20 L 0 20 Z" />
+                                <path d="M 0 0 C 0 11.046 8.954 20 20 20" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.2" />
                             </svg>
                         </div>
 
                         <!-- Notch Action Button: Chat / Hubungi Karyawan (Hover Green Micro-interaction) -->
-                        <div class="shrink-0 flex items-center justify-end pb-3.5 pr-2.5 pl-1.5">
+                        <div class="w-14 shrink-0 flex items-center justify-end pb-3 pr-2.5 pl-1.5">
                             <button 
                                 type="button" 
-                                @click="selectedEmployee = emp"
+                                @click="openChatWith(emp)"
                                 class="w-10 h-10 rounded-full bg-white/85 hover:bg-emerald-500 backdrop-blur-md border border-white/90 hover:border-emerald-400 text-slate-700 hover:text-white flex items-center justify-center transition-all duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-emerald-500/30 active:scale-95 cursor-pointer shrink-0 shadow-xs group/btn"
                                 title="Chat / Hubungi Karyawan"
                             >
@@ -530,8 +616,10 @@
                         </div>
                     </div>
 
-                    <!-- Main Card Body (Frosted Glass Effect) -->
-                    <div class="bg-white/75 backdrop-blur-xl text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-xl hover:bg-white/85 border border-white/80 hover:border-white -mt-px rounded-b-[24px] rounded-tr-[24px] p-4 sm:p-5 pt-3.5 relative transition-all flex-1 flex flex-col justify-between">
+                    <!-- Main Card Body (Frosted Glass Effect - Seamlessly flowing from Profile Tab) -->
+                    <div class="bg-white/80 backdrop-blur-xl text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-xl hover:bg-white/85 border-b border-l border-r border-white/80 rounded-b-[24px] rounded-tr-[24px] p-4 sm:p-5 pt-3.5 relative transition-all flex-1 flex flex-col justify-between">
+                        <!-- Top Shelf Border (Only on the right notch, leaving the left under profile tab 100% borderless) -->
+                        <div class="absolute -top-px right-0 w-14 h-4 border-t border-white/80 rounded-tr-[24px] pointer-events-none"></div>
                         <div>
                             <!-- Live Activity Box (Sedang Mengerjakan) - Frosted Inset Surface -->
                             <div class="p-3 rounded-2xl bg-white/60 backdrop-blur-sm border border-slate-200/60 shadow-xs transition-colors">
@@ -791,7 +879,7 @@
                         </button>
                         <button 
                             type="button" 
-                            @click="showToast('Menghubungkan pesan langsung dengan ' + selectedEmployee.name); selectedEmployee = null" 
+                            @click="openChatWith(selectedEmployee); selectedEmployee = null" 
                             class="px-5 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold shadow-md cursor-pointer transition-all active:scale-95"
                         >
                             Hubungi Langsung
@@ -799,6 +887,302 @@
                     </div>
                 </div>
             </template>
+        </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- FLOATING MODERN CHAT PANEL (Bottom Right - Expandable & Collapsible) -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- FLOATING MODERN CHAT PANEL (Bottom Right - Expandable & Collapsible) -->
+    <!-- ============================================================== -->
+    <div 
+        :class="chatMaximized 
+            ? 'fixed inset-0 z-50 p-2 sm:p-5 md:p-8 flex items-center justify-center bg-slate-900/40 backdrop-blur-md pointer-events-auto' 
+            : 'fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-auto'"
+    >
+        <!-- 1. EXPANDED CHAT PANEL WINDOW -->
+        <div 
+            x-show="chatPanelOpen" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-6 scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 translate-y-6 scale-95"
+            x-cloak
+            :class="chatMaximized 
+                ? 'w-full h-full max-w-6xl max-h-none mb-0 rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.30)]' 
+                : 'w-[360px] sm:w-[400px] h-[540px] max-h-[85vh] rounded-3xl mb-3 shadow-[0_20px_50px_rgba(0,0,0,0.18)]'"
+            class="bg-white/95 backdrop-blur-2xl border border-white/80 flex flex-col overflow-hidden transition-all duration-300"
+        >
+            <!-- Panel Header -->
+            <div class="px-4 py-3 bg-white/90 border-b border-slate-200/70 flex items-center justify-between shrink-0">
+                <!-- Left Info (Employee info OR Inbox Title) -->
+                <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                    <template x-if="chatActiveEmployee && !chatMaximized">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <button 
+                                type="button" 
+                                @click="chatActiveEmployee = null" 
+                                class="p-1 -ml-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                                title="Kembali ke Daftar Pesan"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <div class="relative shrink-0">
+                                <img :src="chatActiveEmployee.avatar" :alt="chatActiveEmployee.name" class="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-500/30">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white absolute bottom-0 right-0"></span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <h4 class="text-xs sm:text-base font-bold text-slate-900 truncate leading-tight" x-text="chatActiveEmployee.name"></h4>
+                                <p class="text-[10px] text-emerald-600 font-medium truncate flex items-center gap-1 mt-0.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                                    <span x-text="chatActiveEmployee.role"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </template>
+                    <template x-if="chatActiveEmployee && chatMaximized">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-900 leading-tight">Workspace Team Chat</h4>
+                                <p class="text-[10px] text-slate-500 font-medium leading-tight mt-0.5">Direct Communication Hub</p>
+                            </div>
+                        </div>
+                    </template>
+                    <template x-if="!chatActiveEmployee">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-xs">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="text-xs sm:text-sm font-bold text-slate-900 leading-tight">Team Messages</h4>
+                                <p class="text-[10px] text-slate-500 font-medium leading-tight mt-0.5">8 Karyawan Terhubung</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Right Controls: Maximize / Restore & Collapse Down -->
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <!-- Maximize / Restore Toggle Button (Replaces X button) -->
+                    <button 
+                        type="button" 
+                        @click="chatMaximized = !chatMaximized" 
+                        class="w-7 h-7 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
+                        :title="chatMaximized ? 'Restore / Perkecil' : 'Maximize / Layar Penuh'"
+                    >
+                        <template x-if="!chatMaximized">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                            </svg>
+                        </template>
+                        <template x-if="chatMaximized">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M4 10h6m0 0V4m0 6L3 3m17 7h-6m0 0V4m0 6l7-7" />
+                            </svg>
+                        </template>
+                    </button>
+
+                    <!-- Down Arrow (Collapse / Hide Panel to floating pill) -->
+                    <button 
+                        type="button" 
+                        @click="chatPanelOpen = false; chatMaximized = false" 
+                        class="w-7 h-7 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
+                        title="Collapse / Sembunyikan"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Body (Flex Dual-Pane when Maximized, Single-Pane when Popup) -->
+            <div class="flex-1 flex min-h-0 overflow-hidden">
+                <!-- Left Sidebar: Employee List (Always visible when chatMaximized; OR visible when !chatMaximized && !chatActiveEmployee) -->
+                <div 
+                    x-show="chatMaximized || (!chatMaximized && !chatActiveEmployee)"
+                    :class="chatMaximized ? 'w-72 sm:w-80 border-r border-slate-200/70 flex flex-col bg-white/70 shrink-0' : 'flex-1 flex flex-col min-h-0 bg-slate-50/50'"
+                >
+                    <!-- Search Box -->
+                    <div class="p-3 bg-white border-b border-slate-200/70 shrink-0">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                x-model="chatSearch" 
+                                placeholder="Cari rekan kerja..." 
+                                class="w-full bg-slate-100/90 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 border border-slate-200 focus:bg-white focus:outline-none focus:border-zinc-800"
+                            >
+                            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Employee Conversations List -->
+                    <div class="flex-1 overflow-y-auto divide-y divide-slate-100">
+                        <template x-for="emp in activeEmployees.filter(e => e.name.toLowerCase().includes(chatSearch.toLowerCase()) || e.role.toLowerCase().includes(chatSearch.toLowerCase()))" :key="emp.id">
+                            <div 
+                                @click="openChatWith(emp)" 
+                                class="p-3 hover:bg-white flex items-center gap-3 cursor-pointer transition-colors group"
+                                :class="chatMaximized && chatActiveEmployee && chatActiveEmployee.id === emp.id ? 'bg-white shadow-xs border-l-4 border-l-emerald-600' : ''"
+                            >
+                                <div class="relative shrink-0">
+                                    <img :src="emp.avatar" :alt="emp.name" class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-2xs">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white absolute bottom-0 right-0"></span>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center justify-between mb-0.5">
+                                        <h5 class="text-xs font-bold text-slate-900 truncate group-hover:text-emerald-700 transition-colors" x-text="emp.name"></h5>
+                                        <span class="text-[10px] text-slate-400" x-text="emp.online_duration"></span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 truncate" x-text="chatConversations[emp.id] ? chatConversations[emp.id][chatConversations[emp.id].length - 1].text : emp.current_activity"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Right Pane: Active Chat Conversation -->
+                <div 
+                    x-show="chatActiveEmployee || (chatMaximized && !chatActiveEmployee)"
+                    class="flex-1 flex flex-col min-h-0 bg-slate-50/50"
+                >
+                    <template x-if="chatActiveEmployee">
+                        <div class="flex-1 flex flex-col min-h-0">
+                            <!-- Context Pill: Current Task / Live Activity -->
+                            <div class="px-4 py-2.5 bg-slate-100/80 border-b border-slate-200/60 flex items-center justify-between gap-2 shrink-0">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <div class="relative shrink-0" x-show="chatMaximized">
+                                        <img :src="chatActiveEmployee.avatar" :alt="chatActiveEmployee.name" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/30">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white absolute bottom-0 right-0"></span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-xs font-bold text-slate-900 truncate leading-tight" x-show="chatMaximized" x-text="chatActiveEmployee.name"></h4>
+                                        <div class="flex items-center gap-1.5 min-w-0 mt-0.5">
+                                            <span class="w-2 h-2 rounded-full shrink-0" :class="{
+                                                'bg-emerald-500': chatActiveEmployee.category === 'deep_work',
+                                                'bg-amber-500': chatActiveEmployee.category === 'meeting',
+                                                'bg-indigo-500': chatActiveEmployee.category === 'review'
+                                            }"></span>
+                                            <span class="text-[11px] font-semibold text-slate-600 truncate" x-text="'Sedang Mengerjakan: ' + chatActiveEmployee.current_activity"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <span class="text-[10px] font-mono text-slate-400" x-text="chatActiveEmployee.online_duration"></span>
+                                    <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white text-slate-600 border border-slate-200/80 shadow-2xs" x-text="chatActiveEmployee.status_label"></span>
+                                </div>
+                            </div>
+
+                            <!-- Chat Messages Scroll Area -->
+                            <div id="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5">
+                                <template x-for="(msg, idx) in (chatConversations[chatActiveEmployee.id] || [])" :key="idx">
+                                    <div class="flex flex-col" :class="msg.sender === 'me' ? 'items-end' : 'items-start'">
+                                        <div 
+                                            class="max-w-[85%] sm:max-w-[70%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-2xs"
+                                            :class="msg.sender === 'me' 
+                                                ? 'bg-zinc-900 text-white rounded-br-xs' 
+                                                : 'bg-white text-slate-800 border border-slate-200/80 rounded-bl-xs'"
+                                            x-text="msg.text"
+                                        ></div>
+                                        <span class="text-[9px] text-slate-400 mt-1 px-1" x-text="msg.time"></span>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <!-- Chat Input Bar -->
+                            <div class="p-3 bg-white border-t border-slate-200/70 flex items-center gap-2.5 shrink-0">
+                                <input 
+                                    id="chatInputField"
+                                    type="text" 
+                                    x-model="chatInputMessage" 
+                                    @keydown.enter.prevent="sendChatMessage()"
+                                    :placeholder="'Ketik pesan untuk ' + chatActiveEmployee.name.split(' ')[0] + '...'"
+                                    class="flex-1 bg-slate-100/80 hover:bg-slate-100 focus:bg-white border border-slate-200 focus:border-emerald-500 rounded-full px-4 py-2 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                                >
+                                <button 
+                                    type="button" 
+                                    @click="sendChatMessage()" 
+                                    class="w-9 h-9 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shrink-0 shadow-xs cursor-pointer active:scale-95 transition-all"
+                                    title="Kirim Pesan"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h14M12 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template x-if="!chatActiveEmployee && chatMaximized">
+                        <div class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400">
+                            <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                            </div>
+                            <h4 class="text-sm font-bold text-slate-700">Pilih Rekan Kerja</h4>
+                            <p class="text-xs text-slate-500 mt-1 max-w-xs">Klik salah satu karyawan di daftar sebelah kiri untuk memulai obrolan langsung.</p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. COLLAPSED FLOATING BADGE / CAPSULE BUTTON -->
+        <div 
+            x-show="!chatMaximized"
+            @click="chatPanelOpen = !chatPanelOpen"
+            class="bg-white/90 hover:bg-white backdrop-blur-2xl border border-white/80 shadow-xl shadow-slate-300/40 rounded-full py-2 px-3.5 flex items-center gap-2.5 cursor-pointer transition-all hover:scale-105 active:scale-95 group select-none"
+            title="Buka Panel Chat"
+        >
+            <!-- Icon Chat with Pulsing Live Dot -->
+            <div class="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-xs relative">
+                <svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white absolute -top-0.5 -right-0.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                </span>
+            </div>
+
+            <!-- Capsule Label -->
+            <div class="flex items-center gap-2">
+                <template x-if="chatActiveEmployee && !chatPanelOpen">
+                    <div class="flex items-center gap-1.5 max-w-[150px]">
+                        <span class="text-xs font-bold text-slate-900 truncate" x-text="'Chat: ' + chatActiveEmployee.name.split(' ')[0]"></span>
+                    </div>
+                </template>
+                <template x-if="!chatActiveEmployee || chatPanelOpen">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-xs font-bold text-slate-900 tracking-tight">Direct Messages</span>
+                        <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">8</span>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Expand / Collapse Chevron Indicator -->
+            <svg 
+                class="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-transform duration-200" 
+                :class="chatPanelOpen ? 'rotate-180' : ''"
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
         </div>
     </div>
 
