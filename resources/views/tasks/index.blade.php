@@ -86,22 +86,20 @@
                     Bagikan
                 </button>
 
-                <!-- Tombol Tugas Baru -->
+                <!-- Tombol Tugas Baru (Matching WORKSPACE Button Style) -->
                 @can('create', App\Models\Task::class)
                     <a 
                         href="{{ route('tasks.create') }}" 
-                        class="inline-flex items-center px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-[#DC2626] to-[#881337] hover:from-[#EF4444] hover:to-[#991B1B] shadow-md transition-all duration-150 active:scale-[0.98]"
+                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer"
                     >
-                        <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                        </svg>
-                        Tugas Baru
+                        <span class="text-sm leading-none">+</span>
+                        <span>Tugas Baru</span>
                     </a>
                 @endcan
             </div>
         </div>
 
-        <!-- 3. TAB NAVIGASI HORIZONTAL DENGAN UNDERLINE AKTIF & VIEW TOGGLE -->
+        <!-- 3. TAB NAVIGASI HORIZONTAL DENGAN UNDERLINE AKTIF & VIEW TOGGLE (Consistent Framer Style) -->
         <div class="flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800/80 -mx-5 sm:-mx-8 px-5 sm:px-8">
             <!-- Tabs -->
             <div class="flex items-center space-x-6 text-xs overflow-x-auto no-scrollbar">
@@ -109,44 +107,44 @@
                 <button 
                     type="button"
                     @click="activeTab = 'all'"
-                    :class="activeTab === 'all' ? 'border-[#881337] text-[#881337] font-semibold' : 'border-transparent text-zinc-500 hover:text-zinc-800'"
+                    :class="activeTab === 'all' ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white font-bold' : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'"
                     class="py-3 border-b-2 transition-colors whitespace-nowrap flex items-center space-x-1 cursor-pointer"
                 >
                     <span>Semua Tugas</span>
-                    <span class="text-zinc-400 font-normal">({{ $totalTasksCount }})</span>
+                    <span class="text-zinc-400 dark:text-zinc-500 font-normal">({{ $totalTasksCount }})</span>
                 </button>
 
                 <!-- Tab: Target -->
                 <button 
                     type="button"
                     @click="activeTab = 'target'"
-                    :class="activeTab === 'target' ? 'border-[#881337] text-[#881337] font-semibold' : 'border-transparent text-zinc-500 hover:text-zinc-800'"
+                    :class="activeTab === 'target' ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white font-bold' : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'"
                     class="py-3 border-b-2 transition-colors whitespace-nowrap flex items-center space-x-1 cursor-pointer"
                 >
                     <span>Target</span>
-                    <span class="text-zinc-400 font-normal">({{ $targetTasksCount }})</span>
+                    <span class="text-zinc-400 dark:text-zinc-500 font-normal">({{ $targetTasksCount }})</span>
                 </button>
 
                 <!-- Tab: Dipantau -->
                 <button 
                     type="button"
                     @click="activeTab = 'review'"
-                    :class="activeTab === 'review' ? 'border-[#881337] text-[#881337] font-semibold' : 'border-transparent text-zinc-500 hover:text-zinc-800'"
+                    :class="activeTab === 'review' ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white font-bold' : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'"
                     class="py-3 border-b-2 transition-colors whitespace-nowrap flex items-center space-x-1 cursor-pointer"
                 >
                     <span>Dipantau</span>
-                    <span class="text-zinc-400 font-normal">({{ $reviewTasksCount }})</span>
+                    <span class="text-zinc-400 dark:text-zinc-500 font-normal">({{ $reviewTasksCount }})</span>
                 </button>
 
                 <!-- Tab: Favorit -->
                 <button 
                     type="button"
                     @click="activeTab = 'favorite'"
-                    :class="activeTab === 'favorite' ? 'border-[#881337] text-[#881337] font-semibold' : 'border-transparent text-zinc-500 hover:text-zinc-800'"
+                    :class="activeTab === 'favorite' ? 'border-zinc-900 text-zinc-900 dark:border-white dark:text-white font-bold' : 'border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200'"
                     class="py-3 border-b-2 transition-colors whitespace-nowrap flex items-center space-x-1 cursor-pointer"
                 >
                     <span>Favorit</span>
-                    <span class="text-zinc-400 font-normal">({{ $favoriteTasksCount }})</span>
+                    <span class="text-zinc-400 dark:text-zinc-500 font-normal">({{ $favoriteTasksCount }})</span>
                 </button>
             </div>
 
@@ -450,8 +448,8 @@
                             x-show="taskMatchesTab('{{ $t->status->value }}', '{{ $t->priority->value }}')"
                             class="hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30 transition-colors"
                         >
-                            <td class="py-3.5 px-4 font-semibold text-zinc-900">
-                                <a href="{{ route('tasks.show', $t) }}" class="hover:text-[#881337] transition-colors block">
+                            <td class="py-3.5 px-4 font-semibold text-zinc-900 dark:text-zinc-100">
+                                <a href="{{ route('tasks.show', $t) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors block">
                                     {{ $t->title }}
                                 </a>
                             </td>
@@ -495,7 +493,7 @@
                                 @endif
                             </td>
                             <td class="py-3.5 px-4 text-right">
-                                <a href="{{ route('tasks.show', $t) }}" class="text-[#881337] font-medium hover:underline">
+                                <a href="{{ route('tasks.show', $t) }}" class="font-bold text-zinc-900 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-400 hover:underline">
                                     Detail &rarr;
                                 </a>
                             </td>

@@ -19,6 +19,12 @@ body {
     font-family: var(--font-sans);
     background-color: #E8ECF1;
     color: #0F172A;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dark body {
+    background-color: #0B0B0E;
+    color: #F4F4F5;
 }
 
 [x-cloak] { display: none !important; }
@@ -39,6 +45,13 @@ body {
     background: #94A3B8;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+    background: #27272A;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #3F3F46;
+}
+
 /* Glassmorphism custom classes */
 .glass-card {
     background: rgba(255, 255, 255, 0.76);
@@ -47,13 +60,28 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.85);
     box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06);
 }
+.dark .glass-card {
+    background: rgba(18, 18, 24, 0.76);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+}
+
 .glass-card-hover:hover {
     background: rgba(255, 255, 255, 0.88);
     box-shadow: 0 16px 36px -5px rgba(15, 23, 42, 0.10);
     border-color: rgba(255, 255, 255, 0.95);
 }
+.dark .glass-card-hover:hover {
+    background: rgba(24, 24, 32, 0.88);
+    box-shadow: 0 16px 36px -5px rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
 .glass-tab {
     background: rgba(255, 255, 255, 0.76);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+}
+.dark .glass-tab {
+    background: rgba(18, 18, 24, 0.76);
 }

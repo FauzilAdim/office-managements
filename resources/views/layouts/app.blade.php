@@ -1,26 +1,39 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-[#E8ECF1]" x-data="{
-    darkMode: false,
+<html lang="id" class="h-full bg-[#E8ECF1] dark:bg-[#0B0B0E] transition-colors" x-data="{
+    darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches),
+    toggleDarkMode() {
+        this.darkMode = !this.darkMode;
+        if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    },
     quickSwitchOpen: false,
-    callActive: true,
-    micMuted: false,
-    camDisabled: false,
-    speakerMuted: false,
-    scheduleDrawerOpen: false,
-    notificationOpen: false,
     userMenuOpen: false,
     toastMessage: '',
     showToast(msg) {
         this.toastMessage = msg;
         setTimeout(() => { this.toastMessage = ''; }, 3000);
     }
-}">
+}" :class="{ 'dark': darkMode }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Workspace') - Office Management System</title>
     
+    <!-- Anti-FOUC Dark Mode Detection -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,118 +41,99 @@
     
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full font-sans antialiased text-slate-800 bg-[#E8ECF1] selection:bg-zinc-900 selection:text-white relative overflow-x-hidden min-h-screen flex flex-col">
+<body class="h-full font-sans antialiased text-slate-800 dark:text-zinc-100 bg-[#E8ECF1] dark:bg-[#0B0B0E] selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-100 dark:selection:text-zinc-900 relative overflow-x-hidden min-h-screen flex flex-col transition-colors duration-200">
 
     <!-- Ambient Subtle Soft Diffused Backlight -->
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-gradient-to-b from-white/60 via-white/20 to-transparent pointer-events-none blur-3xl z-0"></div>
-    <div class="fixed top-96 left-0 w-[450px] h-[450px] bg-blue-100/30 pointer-events-none blur-3xl z-0"></div>
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-gradient-to-b from-white/60 via-white/20 to-transparent dark:from-zinc-800/30 dark:via-zinc-900/10 pointer-events-none blur-3xl z-0"></div>
+    <div class="fixed top-96 left-0 w-[450px] h-[450px] bg-blue-100/30 dark:bg-blue-950/20 pointer-events-none blur-3xl z-0"></div>
 
-    <!-- 1. DYNAMIC ISLAND STYLE FLOATING CAPSULE (Dominan Hitam-Putih dengan semantic green, yellow, red) -->
-    <div class="fixed top-3.5 left-1/2 -translate-x-1/2 z-50 hidden md:flex items-center bg-[#101014]/95 backdrop-blur-2xl text-white rounded-full py-1.5 pl-4 pr-2 shadow-[0_16px_40px_rgba(0,0,0,0.30)] border border-white/[0.12] max-w-2xl transition-all duration-300 pointer-events-auto">
-        <!-- Live Status Green Pulse (Hijau: Berhasil / Sesi Berjalan) -->
-        <span class="flex h-2.5 w-2.5 relative mr-2.5 shrink-0">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-        </span>
-
-        <span class="text-xs sm:text-sm font-bold tracking-tight text-white whitespace-nowrap mr-3.5">
-            Your Schedule
-        </span>
-
-        <!-- Date Pill: Hitam-Putih Minimalist -->
-        <button 
-            type="button" 
-            @click="scheduleDrawerOpen = !scheduleDrawerOpen"
-            class="bg-white/10 hover:bg-white/15 text-zinc-200 rounded-full px-3 py-1.5 text-xs font-semibold flex items-center gap-1.5 border border-white/10 transition-colors cursor-pointer mr-3 shadow-xs"
-        >
-            <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span>28 March</span>
-        </button>
-
-        <!-- Monochrome Timeline Progress Track with Semantic Indicator Lights -->
-        <div class="bg-white/[0.08] text-white border border-white/[0.08] rounded-full py-1 px-3 flex items-center gap-2.5 relative">
-            <!-- Hijau Chip (Sedang Sesi Aktif) + X dismiss (Merah saat hover/alert) -->
-            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-                <span>30 min</span>
-                <button type="button" @click="showToast('Sesi 30 menit ditutup')" class="hover:text-rose-400 text-zinc-400 cursor-pointer ml-0.5" title="Tutup Sesi (Danger/Close)">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- 2:00 PM Slot -->
-            <span class="text-[11px] font-bold text-zinc-200">2:00 PM</span>
-
-            <!-- Overlapping Avatars (2:00 PM) -->
-            <div class="flex -space-x-1.5 items-center">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80" alt="Attendant" class="w-5 h-5 rounded-full object-cover ring-1 ring-white/40">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100&q=80" alt="Attendant" class="w-5 h-5 rounded-full object-cover ring-1 ring-white/40">
-            </div>
-
-            <!-- Current Indicator Marker: 2:30 PM (Kuning / Hati-hati upcoming reminder) -->
-            <div class="relative flex flex-col items-center">
-                <span class="bg-amber-400 text-zinc-950 text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow -translate-y-2 whitespace-nowrap leading-tight">
-                    2:30 PM
-                </span>
-                <div class="w-0.5 h-3 bg-amber-400 absolute -bottom-1"></div>
-            </div>
-
-            <!-- Blue Video Camera Badge (Zoom meeting at 3:00 PM) with Red urgent dot if overdue/alert -->
-            <div class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-xs relative">
-                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                </svg>
-                <!-- Merah Alert Indicator (Merah untuk urgent/danger) -->
-                <span class="w-2 h-2 rounded-full bg-rose-500 absolute -top-0.5 -right-0.5 ring-1 ring-zinc-900 animate-ping"></span>
-            </div>
-
-            <!-- 3:00 PM Slot -->
-            <span class="text-[11px] font-bold text-zinc-200">3:00 PM</span>
-
-            <!-- Overlapping Avatars (3:00 PM) -->
-            <div class="flex -space-x-1.5 items-center">
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100&q=80" alt="Attendant" class="w-5 h-5 rounded-full object-cover ring-1 ring-white/40">
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&h=100&q=80" alt="Attendant" class="w-5 h-5 rounded-full object-cover ring-1 ring-white/40">
-            </div>
-
-            <!-- Diagonal Arrow Button (White/Black) -->
-            <button 
-                type="button" 
-                @click="scheduleDrawerOpen = !scheduleDrawerOpen" 
-                title="Buka Kalender Jadwal"
-                class="w-7 h-7 rounded-full bg-white hover:bg-zinc-200 text-zinc-950 flex items-center justify-center shadow transition-transform hover:scale-110 cursor-pointer ml-1"
-            >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- 2. TOP HEADER (Menyatu dengan background, tanpa blur/border, ikut ter-scroll ke atas) -->
+    <!-- TOP HEADER -->
     <header class="relative w-full px-4 sm:px-6 lg:px-8 pt-4 pb-2 flex items-center justify-between bg-transparent z-30">
-        <!-- Left Spacer -->
-        <div class="hidden sm:block w-11 shrink-0"></div>
+        <!-- Left: Workspace & Division Brand Pill -->
+        <div class="flex items-center gap-2.5">
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-900/80 dark:hover:bg-zinc-800 backdrop-blur-md border border-white/80 dark:border-zinc-800 shadow-xs transition-colors">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span class="text-xs font-bold text-slate-900 dark:text-zinc-100 tracking-tight">Office Management</span>
+                <span class="text-[11px] text-slate-400 dark:text-zinc-500 font-normal">/</span>
+                <span class="text-xs font-medium text-slate-600 dark:text-zinc-400">{{ auth()->user()?->division?->name ?? 'HQ Workspace' }}</span>
+            </a>
+        </div>
 
-        <!-- Right: Notification Bell with Red Dot + User Profile Avatar with Dropdown -->
-        <div class="flex items-center space-x-3 shrink-0 ml-auto">
-            <!-- Notification Bell Icon Button (Glass look) -->
+        <!-- Right: Theme Switcher + Notification Bell + User Profile Avatar with Dropdown -->
+        <div class="flex items-center space-x-2.5 sm:space-x-3 shrink-0 ml-auto">
+            <!-- Dark / Light Mode Toggle Button -->
             <button 
                 type="button" 
-                @click="notificationOpen = !notificationOpen"
-                title="Notifikasi" 
-                class="w-11 h-11 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-white/80 shadow-sm flex items-center justify-center text-slate-600 hover:text-slate-900 relative transition-colors cursor-pointer"
+                @click="toggleDarkMode()" 
+                title="Ganti Mode Terang / Gelap" 
+                class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-900/80 dark:hover:bg-zinc-800 backdrop-blur-md border border-white/80 dark:border-zinc-800 shadow-sm flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-yellow-400 transition-colors cursor-pointer"
             >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                <!-- Sun Icon (shown when darkMode is true) -->
+                <svg x-show="darkMode" class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
-                <!-- Active dot (Merah untuk unread notification) -->
-                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 absolute top-2.5 right-2.5 ring-2 ring-white animate-pulse"></span>
+                <!-- Moon Icon (shown when darkMode is false) -->
+                <svg x-show="!darkMode" class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
             </button>
+
+            <!-- Notification Bell Icon Button with Dropdown -->
+            <div class="relative" x-data="{ notifOpen: false }">
+                <button 
+                    type="button" 
+                    @click="notifOpen = !notifOpen"
+                    title="Notifikasi Tugas" 
+                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-900/80 dark:hover:bg-zinc-800 backdrop-blur-md border border-white/80 dark:border-zinc-800 shadow-sm flex items-center justify-center text-slate-600 hover:text-slate-900 dark:text-zinc-300 dark:hover:text-zinc-100 relative transition-colors cursor-pointer"
+                >
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    @if(auth()->user() && auth()->user()->activeTasksCount() > 0)
+                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 absolute top-2.5 right-2.5 ring-2 ring-white dark:ring-zinc-900"></span>
+                    @endif
+                </button>
+
+                <!-- Notification Dropdown Panel -->
+                <div 
+                    x-show="notifOpen" 
+                    x-cloak 
+                    @click.outside="notifOpen = false"
+                    class="absolute right-0 mt-2 w-80 rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl p-3 z-50 text-xs space-y-2"
+                >
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-zinc-800">
+                        <h4 class="font-bold text-slate-900 dark:text-zinc-100">Notifikasi Tugas</h4>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300">
+                            {{ auth()->user()?->activeTasksCount() ?? 0 }} Tugas
+                        </span>
+                    </div>
+
+                    @php
+                        $activeTask = auth()->user()?->currentActiveTask();
+                    @endphp
+
+                    @if($activeTask)
+                        <a href="{{ route('tasks.show', $activeTask) }}" class="block p-2.5 rounded-xl bg-blue-50/70 hover:bg-blue-50 dark:bg-blue-950/40 dark:hover:bg-blue-950/60 border border-blue-100 dark:border-blue-900/50 transition-colors">
+                            <span class="text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider block mb-0.5">Sedang Dikerjakan</span>
+                            <p class="font-bold text-slate-900 dark:text-zinc-100 line-clamp-1">{{ $activeTask->title }}</p>
+                            <p class="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5">Deadline: {{ $activeTask->deadline ? $activeTask->deadline->format('d M Y') : 'Tanpa deadline' }}</p>
+                        </a>
+                    @else
+                        <div class="py-4 text-center text-slate-500 dark:text-zinc-400 text-xs">
+                            Tidak ada tugas in-progress saat ini.
+                        </div>
+                    @endif
+
+                    <div class="pt-1 border-t border-slate-100 dark:border-zinc-800 text-center">
+                        <a href="{{ route('tasks.index') }}" class="text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:underline inline-flex items-center gap-1">
+                            <span>Buka Manajemen Tugas</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <!-- User Profile Avatar Pill with Dropdown -->
             <div class="relative" x-data="{ open: false }">
@@ -147,7 +141,7 @@
                     type="button" 
                     @click="open = !open" 
                     title="{{ auth()->user()->name ?? 'Pengguna' }}"
-                    class="w-11 h-11 rounded-full ring-2 ring-white/90 hover:ring-zinc-900 transition-all cursor-pointer overflow-hidden shadow-sm flex items-center justify-center bg-slate-100"
+                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-full ring-2 ring-white/90 dark:ring-zinc-800 hover:ring-zinc-900 dark:hover:ring-zinc-600 transition-all cursor-pointer overflow-hidden shadow-sm flex items-center justify-center bg-slate-100 dark:bg-zinc-800"
                 >
                     <img 
                         src="{{ auth()->user()?->avatar ? auth()->user()->avatarUrl() : 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=256&h=256&q=80' }}" 
@@ -161,46 +155,67 @@
                     x-show="open" 
                     x-cloak 
                     @click.outside="open = false"
-                    class="absolute right-0 mt-2 w-64 rounded-2xl bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-xl p-2 z-50 text-xs space-y-1"
+                    class="absolute right-0 mt-2 w-64 rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl p-2 z-50 text-xs space-y-1"
                 >
-                    <div class="px-3 py-2.5 border-b border-slate-100">
-                        <p class="font-bold text-slate-900 text-sm truncate">{{ auth()->user()->name ?? 'Budi Pratama, M.B.A.' }}</p>
-                        <p class="text-[11px] text-slate-500 truncate mt-0.5">{{ auth()->user()->email ?? 'direktur@office.com' }}</p>
-                        <span class="inline-block mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-zinc-100 text-zinc-800 border border-zinc-200">
+                    <div class="px-3 py-2.5 border-b border-slate-100 dark:border-zinc-800">
+                        <p class="font-bold text-slate-900 dark:text-zinc-100 text-sm truncate">{{ auth()->user()->name ?? 'Budi Pratama, M.B.A.' }}</p>
+                        <p class="text-[11px] text-slate-500 dark:text-zinc-400 truncate mt-0.5">{{ auth()->user()->email ?? 'direktur@office.com' }}</p>
+                        <span class="inline-block mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
                             {{ auth()->user()?->roleDisplayName() ?? 'Direktur' }}
                         </span>
                     </div>
 
-                    <a href="{{ route('projects.index') }}" class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('dashboard') }}" class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-50 dark:hover:bg-zinc-800/70 transition-colors">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        <span>Workspace / Dashboard</span>
+                    </a>
+
+                    <a href="{{ route('tasks.index') }}" class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-50 dark:hover:bg-zinc-800/70 transition-colors">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <span>Manajemen Tugas</span>
+                    </a>
+
+                    <a href="{{ route('projects.index') }}" class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-50 dark:hover:bg-zinc-800/70 transition-colors">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                         </svg>
                         <span>Manajemen Project</span>
                     </a>
 
-                    <a href="{{ route('employees.index') }}" class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-50 transition-colors">
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('employees.index') }}" class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-50 dark:hover:bg-zinc-800/70 transition-colors">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span>Direktori Tim & Karyawan</span>
                     </a>
 
-                    <button 
-                        type="button" 
-                        @click="quickSwitchOpen = true; open = false" 
-                        class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-indigo-600 hover:bg-indigo-50 transition-colors text-left font-medium cursor-pointer"
-                    >
-                        <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    <a href="{{ route('organization.index') }}" class="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-slate-50 dark:hover:bg-zinc-800/70 transition-colors">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                         </svg>
-                        <span>Beralih Peran (Quick Switcher)</span>
-                    </button>
+                        <span>Struktur Organisasi</span>
+                    </a>
 
-                    <div class="border-t border-slate-100 pt-1">
+                    <div class="border-t border-slate-100 dark:border-zinc-800 pt-1">
+                        <button 
+                            type="button" 
+                            @click="quickSwitchOpen = true; open = false" 
+                            class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition-colors text-left font-medium cursor-pointer"
+                        >
+                            <svg class="w-4 h-4 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                            <span>Beralih Peran (Quick Switcher)</span>
+                        </button>
+
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-rose-600 hover:text-rose-700 hover:bg-rose-50 transition-colors text-left font-medium cursor-pointer">
-                                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <button type="submit" class="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors text-left font-medium cursor-pointer">
+                                <svg class="w-4 h-4 text-rose-500 dark:text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                 </svg>
                                 <span>Keluar</span>
@@ -216,58 +231,67 @@
     <div class="flex-1 flex w-full relative">
         
         <!-- 2. LEFT FLOATING VERTICAL DOCK (Vertically centered, Frosted Glass look) -->
-        <aside class="fixed left-4 sm:left-6 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-center bg-white/75 backdrop-blur-xl border border-white/80 rounded-full p-2 py-4 shadow-xl shadow-slate-300/40 gap-3">
+        <aside class="fixed left-4 sm:left-6 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-center bg-white/75 dark:bg-zinc-900/85 backdrop-blur-xl border border-white/80 dark:border-zinc-800/80 rounded-full p-2 py-4 shadow-xl shadow-slate-300/40 dark:shadow-black/50 gap-3 transition-colors">
             <!-- Icon 1: Grid / Workspace -->
             <a 
                 href="{{ route('dashboard') }}" 
                 title="Workspace" 
-                class="w-10 h-10 rounded-full {{ request()->routeIs('dashboard') ? 'bg-zinc-900 text-white shadow-md' : 'text-slate-400 hover:text-zinc-900 hover:bg-white/80' }} flex items-center justify-center transition-all cursor-pointer"
+                class="w-10 h-10 rounded-full {{ request()->routeIs('dashboard*') ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 shadow-md' : 'text-slate-400 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800' }} flex items-center justify-center transition-all cursor-pointer"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
             </a>
 
-            <!-- Icon 2: Projects (New Project Menu) -->
+            <!-- Icon 2: Tasks -->
+            <a 
+                href="{{ route('tasks.index') }}" 
+                title="Manajemen Tugas" 
+                class="w-10 h-10 rounded-full {{ request()->routeIs('tasks.*') ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 shadow-md' : 'text-slate-400 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800' }} flex items-center justify-center transition-all cursor-pointer"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+            </a>
+
+            <!-- Icon 3: Projects -->
             <a 
                 href="{{ route('projects.index') }}" 
                 title="Project & Tim" 
-                class="w-10 h-10 rounded-full {{ request()->routeIs('projects.*') ? 'bg-zinc-900 text-white shadow-md' : 'text-slate-400 hover:text-zinc-900 hover:bg-white/80' }} flex items-center justify-center transition-all cursor-pointer"
+                class="w-10 h-10 rounded-full {{ request()->routeIs('projects.*') ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 shadow-md' : 'text-slate-400 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800' }} flex items-center justify-center transition-all cursor-pointer"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                 </svg>
             </a>
 
-            <!-- Icon 3: Team / People (Directory) -->
+            <!-- Icon 4: Team / People (Directory) -->
             <a 
                 href="{{ route('employees.index') }}" 
                 title="Data Karyawan & Tim" 
-                class="w-10 h-10 rounded-full {{ request()->routeIs('employees.*') ? 'bg-zinc-900 text-white shadow-md' : 'text-slate-400 hover:text-zinc-900 hover:bg-white/80' }} flex items-center justify-center transition-all cursor-pointer"
+                class="w-10 h-10 rounded-full {{ request()->routeIs('employees.*') ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 shadow-md' : 'text-slate-400 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800' }} flex items-center justify-center transition-all cursor-pointer"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                 </svg>
             </a>
 
-
-            <!-- Icon 4: Calendar / Schedule -->
-            <button 
-                type="button" 
-                @click="scheduleDrawerOpen = true"
-                title="Kalender Jadwal" 
-                class="w-10 h-10 rounded-full text-slate-400 hover:text-zinc-900 hover:bg-white/80 flex items-center justify-center transition-all cursor-pointer"
+            <!-- Icon 5: Organization Hierarchy -->
+            <a 
+                href="{{ route('organization.index') }}" 
+                title="Struktur Organisasi" 
+                class="w-10 h-10 rounded-full {{ request()->routeIs('organization.*') ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 shadow-md' : 'text-slate-400 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800' }} flex items-center justify-center transition-all cursor-pointer"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-            </button>
+            </a>
         </aside>
 
         <!-- Main Body Canvas -->
         <main class="flex-1 w-full pl-4 md:pl-24 pr-4 sm:pr-8 lg:pr-10 py-6 min-w-0">
             <!-- Toast notification pill -->
-            <div x-show="toastMessage" x-cloak class="fixed top-20 right-8 z-50 bg-white/95 backdrop-blur-xl text-slate-900 border border-slate-200/90 px-4 py-2.5 rounded-full shadow-xl flex items-center gap-2 text-xs font-semibold animate-bounce">
+            <div x-show="toastMessage" x-cloak class="fixed top-20 right-8 z-50 bg-white/95 dark:bg-zinc-900/95 text-slate-900 dark:text-zinc-100 border border-slate-200/90 dark:border-zinc-800 px-4 py-2.5 rounded-full shadow-xl flex items-center gap-2 text-xs font-semibold animate-bounce">
                 <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span x-text="toastMessage"></span>
             </div>
@@ -275,6 +299,55 @@
             @yield('content')
         </main>
     </div>
+
+    <!-- Quick Role Switcher Modal -->
+    <div x-show="quickSwitchOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div @click="quickSwitchOpen = false" class="fixed inset-0 bg-slate-900/50 dark:bg-black/70 backdrop-blur-xs"></div>
+
+        <div class="relative bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-zinc-800 z-10 overflow-hidden text-slate-900 dark:text-zinc-100">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 dark:text-zinc-100">Ganti Akun Demo (Testing Peran)</h3>
+                    <p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Uji coba otorisasi & tampilan peran dalam sistem</p>
+                </div>
+                <button @click="quickSwitchOpen = false" class="text-slate-400 dark:text-zinc-500 hover:text-slate-700 dark:hover:text-zinc-200 p-1 text-lg font-bold cursor-pointer">&times;</button>
+            </div>
+
+            <div class="mt-4 space-y-2.5 max-h-96 overflow-y-auto pr-1">
+                @php
+                    $demoAccounts = [
+                        ['email' => 'direktur@office.com', 'role' => 'Direktur', 'name' => 'Budi Pratama, M.B.A.', 'desc' => 'Akses penuh seluruh perusahaan & semua level'],
+                        ['email' => 'vp.tech@office.com', 'role' => 'VP', 'name' => 'Ir. Hendra Gunawan', 'desc' => 'Divisi Teknologi (Manager, Lead, Staff TECH)'],
+                        ['email' => 'manager.it@office.com', 'role' => 'Manager', 'name' => 'Reza Rahadian, S.Kom', 'desc' => 'Kelola Team Lead & Staff IT'],
+                        ['email' => 'lead.dev@office.com', 'role' => 'Team Lead', 'name' => 'Fauzil Adzim', 'desc' => 'Bisa buat & assign tugas ke Staff dev'],
+                        ['email' => 'staff.dev1@office.com', 'role' => 'Staff', 'name' => 'Ahmad Fikri', 'desc' => 'Hanya lihat & update tugas miliknya'],
+                    ];
+                @endphp
+
+                @foreach($demoAccounts as $demo)
+                    <form action="{{ route('quick-login') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="email" value="{{ $demo['email'] }}">
+                        <button type="submit" class="w-full text-left p-3.5 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-slate-50/80 dark:bg-zinc-800/50 hover:border-slate-300 dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all duration-150 flex items-center justify-between group cursor-pointer shadow-xs">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-xs text-slate-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400">{{ $demo['name'] }}</span>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-zinc-700 text-slate-700 dark:text-zinc-300">{{ $demo['role'] }}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">{{ $demo['desc'] }}</p>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </form>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
 
 
 
@@ -320,43 +393,6 @@
                         </button>
                     </form>
                 @endforeach
-            </div>
-        </div>
-    </div>
-
-    <!-- Schedule Drawer (When clicking 28 March or Schedule) -->
-    <div x-show="scheduleDrawerOpen" x-cloak class="fixed inset-0 z-50 flex justify-end">
-        <div @click="scheduleDrawerOpen = false" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"></div>
-        <div class="relative w-full max-w-md bg-white/95 backdrop-blur-xl h-full shadow-2xl border-l border-slate-200 p-6 flex flex-col z-10 overflow-y-auto text-slate-900">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900">Jadwal Agenda 28 March</h3>
-                    <p class="text-xs text-slate-500">Kalender pertemuan & agenda kerja hari ini</p>
-                </div>
-                <button @click="scheduleDrawerOpen = false" class="text-slate-400 hover:text-slate-700 text-xl font-bold cursor-pointer">&times;</button>
-            </div>
-
-            <div class="mt-6 space-y-4">
-                <div class="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200">
-                    <span class="text-[11px] font-bold text-emerald-700 flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        2:00 PM - 2:30 PM (Sedang Berlangsung)
-                    </span>
-                    <h4 class="text-sm font-bold text-slate-900 mt-1">Review Penawaran Klien Goldman-Sachs</h4>
-                    <p class="text-xs text-slate-600 mt-0.5">Bersama John Doe & Tim Marketing</p>
-                </div>
-
-                <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200">
-                    <span class="text-[11px] font-bold text-amber-700">2:30 PM - 3:00 PM (Berikutnya)</span>
-                    <h4 class="text-sm font-bold text-slate-900 mt-1">Zoom Meeting: Fed-Ex Onboarding</h4>
-                    <p class="text-xs text-slate-500 mt-0.5">Bersama Rebecca Morris</p>
-                </div>
-
-                <div class="p-4 rounded-2xl bg-slate-50/80 border border-slate-200">
-                    <span class="text-[11px] font-bold text-slate-600">3:30 PM - 4:15 PM</span>
-                    <h4 class="text-sm font-bold text-slate-900 mt-1">Diskusi Teknis Arsitektur Cloud</h4>
-                    <p class="text-xs text-slate-500 mt-0.5">Bersama Ir. Hendra Gunawan (VP Tech)</p>
-                </div>
             </div>
         </div>
     </div>

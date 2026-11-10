@@ -8,7 +8,6 @@
     taskFilter: 'all',
     taskSearch: '',
     showTaskSearch: false,
-    newTaskModalOpen: false,
     selectedEmployee: null,
     selectedTask: null,
     activeEmployees: [
@@ -485,58 +484,95 @@
 }">
 
     <!-- ========================================== -->
-    <!-- 1. WORKSPACE HEADER SECTION WITH TITLE & STATS -->
+    <!-- 1. WORKSPACE HEADER SECTION WITH TITLE & STAT CARDS -->
     <!-- ========================================== -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-        <!-- Left: New Task Button -->
-        <div class="flex items-center flex-wrap gap-4">
-            <!-- "+ New Task" Rounded Premium Dark Button -->
-            <button 
-                type="button" 
-                @click="newTaskModalOpen = true"
-                class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-lg shadow-zinc-900/15 flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ml-1"
-            >
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                </svg>
-                <span>New Task</span>
-            </button>
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+        <!-- Left: Workspace Overview Title & Subtitle -->
+        <div>
+            <div class="flex items-center gap-2.5 mb-1">
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Workspace Overview</h1>
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Live</span>
+                </span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-zinc-400">Monitoring real-time aktivitas tim, progres tugas, dan kinerja operasional.</p>
         </div>
 
-        <!-- Right: Real-time Deals Statistics Counter -->
-        <div class="flex items-center space-x-6 sm:space-x-8 shrink-0">
-            <!-- Stat 1: 34 Deals (+4 Deals) - Hijau Berhasil -->
-            <div class="flex items-baseline space-x-2.5">
-                <span class="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">34</span>
-                <span class="bg-emerald-600 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                    <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.527.82-1.127 2.18-1.503 3.664a13.38 13.38 0 00-2.457 1.57A6.47 6.47 0 004 12c0 3.314 2.686 6 6 6s6-2.686 6-6a7.29 7.29 0 00-.735-3.218 10.3 10.3 0 00-2.87-3.229zm-1.077 4.148c.37-.93.75-1.745 1.13-2.443.43.518.84 1.126 1.206 1.813.626 1.173.946 2.378.946 3.482 0 2.209-1.791 4-4 4s-4-1.791-4-4c0-.986.357-2.072 1.055-3.118a11.39 11.39 0 012.146-2.346c-.035.88-.046 1.77.117 2.612z" clip-rule="evenodd" />
+        <!-- Right: Real-time Operational Stat Cards (Framer Glassmorphism Cards with Dark Mode Support) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 shrink-0">
+            <!-- Card 1: Total Tasks -->
+            <a 
+                href="{{ route('tasks.index') }}" 
+                class="bg-white/80 hover:bg-white dark:bg-zinc-900/75 dark:hover:bg-zinc-900/95 backdrop-blur-xl border border-white/90 dark:border-zinc-800 shadow-sm hover:shadow-md dark:shadow-black/40 rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer block min-w-[160px] group"
+                title="Lihat semua tugas"
+            >
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-zinc-400">Total Tugas</span>
+                    <span class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full font-mono">
+                        {{ $metrics['active_tasks'] ?? 0 }} Aktif
+                    </span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-mono">
+                    {{ $metrics['total_tasks'] ?? 0 }}
+                </div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-zinc-800/80 text-[11px] text-slate-400 dark:text-zinc-500 group-hover:text-zinc-800 dark:group-hover:text-zinc-200 transition-colors">
+                    <span>Semua tugas</span>
+                    <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
-                    <span>4 Deals</span>
-                </span>
-            </div>
+                </div>
+            </a>
 
-            <!-- Stat 2: 20 Deals (+3 Deals) - Biru Progres -->
-            <div class="flex items-baseline space-x-2.5">
-                <span class="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">20</span>
-                <span class="bg-blue-600 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                    <svg class="w-3 h-3 fill-none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            <!-- Card 2: In-Progress Tasks -->
+            <a 
+                href="{{ route('tasks.index', ['status' => 'in_progress']) }}" 
+                class="bg-white/80 hover:bg-white dark:bg-zinc-900/75 dark:hover:bg-zinc-900/95 backdrop-blur-xl border border-white/90 dark:border-zinc-800 shadow-sm hover:shadow-md dark:shadow-black/40 rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer block min-w-[160px] group"
+                title="Lihat tugas in-progress"
+            >
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-zinc-400">Sedang Dikerjakan</span>
+                    <span class="bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 font-mono">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                        <span>Progress</span>
+                    </span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400 tracking-tight font-mono">
+                    {{ $metrics['in_progress_tasks'] ?? 0 }}
+                </div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-zinc-800/80 text-[11px] text-slate-400 dark:text-zinc-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    <span>In-progress</span>
+                    <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
-                    <span>3 Deals</span>
-                </span>
-            </div>
+                </div>
+            </a>
 
-            <!-- Stat 3: 3 Deals (-1 Deals) - Abu-abu Netral -->
-            <div class="flex items-baseline space-x-2.5">
-                <span class="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">3</span>
-                <span class="bg-slate-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs">
-                    <svg class="w-3 h-3 fill-none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            <!-- Card 3: Completed Tasks -->
+            <a 
+                href="{{ route('tasks.index', ['status' => 'completed']) }}" 
+                class="bg-white/80 hover:bg-white dark:bg-zinc-900/75 dark:hover:bg-zinc-900/95 backdrop-blur-xl border border-white/90 dark:border-zinc-800 shadow-sm hover:shadow-md dark:shadow-black/40 rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer block min-w-[160px] group"
+                title="Lihat tugas selesai"
+            >
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-xs font-semibold text-slate-500 dark:text-zinc-400">Tugas Selesai</span>
+                    <span class="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1 font-mono">
+                        <svg class="w-3 h-3 fill-current text-emerald-600 dark:text-emerald-400" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <span>{{ $metrics['completion_rate'] ?? 0 }}%</span>
+                    </span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400 tracking-tight font-mono">
+                    {{ $metrics['completed_tasks'] ?? 0 }}
+                </div>
+                <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 dark:border-zinc-800/80 text-[11px] text-slate-400 dark:text-zinc-500 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    <span>Tuntas</span>
+                    <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
-                    <span>1 Deals</span>
-                </span>
-            </div>
+                </div>
+            </a>
         </div>
     </div>
 
@@ -545,42 +581,70 @@
     <!-- 2. SECTION 1: KARYAWAN AKTIF & KEGIATAN   -->
     <!-- ========================================== -->
     <section class="mb-12">
-        <!-- Section Header Row: Title + Filter Controls -->
+        <!-- Section Header Row: Title + Controls (Create Task + Search + Reset + Dropdown) -->
         <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-            <!-- Left: Spacer -->
-            <div></div>
+            <!-- Left: Section Title -->
+            <div>
+                <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                    <span>Aktivitas Rekan Kerja</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 font-mono" x-text="filteredEmployees().length + ' Online'"></span>
+                </h2>
+                <p class="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Status aktivitas aktif dan software yang sedang digunakan tim</p>
+            </div>
 
-            <!-- Right: Search, Filter Sliders, and Employee Status/Division Pills -->
-            <div class="flex items-center flex-wrap gap-2.5">
-                <!-- Search Button / Input (Frosted Glass) -->
+            <!-- Right: [ + Buat Tugas Baru ] [ Permanent Search Bar with Right Search Button ] [ Reset ] [ Dropdown Filter ] -->
+            <div class="flex items-center flex-wrap gap-2.5 sm:gap-3">
+                <!-- 1. Tombol Buat Tugas Baru (Dipindah ke sebelah search bar) -->
+                @can('create', App\Models\Task::class)
+                    <a 
+                        href="{{ route('tasks.create') }}"
+                        class="h-10 px-4 sm:px-4.5 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-zinc-900/15 dark:shadow-none transition-all active:scale-95 cursor-pointer shrink-0"
+                        title="Buat Tugas Baru"
+                    >
+                        <svg class="w-4 h-4 text-white dark:text-zinc-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Buat Tugas Baru</span>
+                    </a>
+                @else
+                    <a 
+                        href="{{ route('tasks.index') }}"
+                        class="h-10 px-4 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-900/80 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 font-bold text-xs border border-white/80 dark:border-zinc-800 shadow-xs flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shrink-0"
+                        title="Lihat Tugas Saya"
+                    >
+                        <svg class="w-4 h-4 text-slate-600 dark:text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        <span>Tugas Saya</span>
+                    </a>
+                @endcan
+
+                <!-- 2. Search Bar Permanen (Bukan expand/collapse) dengan Button Search di Sebelah Kanan -->
                 <div class="relative flex items-center">
+                    <input 
+                        type="text" 
+                        x-model="employeeSearch"
+                        @input="currentPage = 1"
+                        placeholder="Cari karyawan / aktivitas..." 
+                        class="h-10 pl-4 pr-10 text-xs rounded-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border border-white/80 dark:border-zinc-800 text-slate-900 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-900 dark:focus:ring-zinc-600 w-52 sm:w-64 shadow-xs transition-colors"
+                    >
+                    <!-- Search Button on the Right Side -->
                     <button 
                         type="button" 
-                        @click="showEmployeeSearch = !showEmployeeSearch; if(showEmployeeSearch) $nextTick(() => $refs.employeeSearchInput.focus())"
-                        class="w-9 h-9 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-white/80 shadow-xs flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
-                        title="Cari Karyawan / Aktivitas"
+                        class="absolute right-1 w-8 h-8 rounded-full bg-transparent hover:bg-slate-100 dark:hover:bg-zinc-800 flex items-center justify-center text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-zinc-100 transition-colors cursor-pointer"
+                        title="Cari"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </button>
-                    <input 
-                        x-ref="employeeSearchInput"
-                        x-show="showEmployeeSearch" 
-                        x-cloak 
-                        type="text" 
-                        x-model="employeeSearch"
-                        @input="currentPage = 1"
-                        placeholder="Cari karyawan / aktivitas..." 
-                        class="ml-2 px-3.5 py-1.5 text-xs rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 w-48 shadow-xs"
-                    >
                 </div>
 
-                <!-- Sliders Filter Reset Button -->
+                <!-- 3. Sliders Filter Reset Button -->
                 <button 
                     type="button" 
                     @click="employeeFilter = 'all'; employeeSearch = ''; currentPage = 1; filterDropdownOpen = false; showToast('Filter direset ke Semua')"
-                    class="w-9 h-9 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-white/80 shadow-xs flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
+                    class="h-10 w-10 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-900/80 dark:hover:bg-zinc-800 backdrop-blur-md border border-white/80 dark:border-zinc-800 shadow-xs flex items-center justify-center text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 transition-colors cursor-pointer shrink-0"
                     title="Reset Filter"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -588,14 +652,14 @@
                     </svg>
                 </button>
 
-                <!-- Modern Dropdown Filtering Menu (Framer-style Clean Dropdown) -->
+                <!-- 4. Modern Dropdown Filtering Menu (Framer-style Clean Dropdown) -->
                 <div class="relative" @click.outside="filterDropdownOpen = false">
                     <!-- Dropdown Trigger Capsule Button -->
                     <button 
                         type="button" 
                         @click="filterDropdownOpen = !filterDropdownOpen"
-                        class="h-9 px-3.5 sm:px-4 rounded-full bg-white/80 hover:bg-white text-slate-700 hover:text-slate-900 border border-white/80 shadow-xs flex items-center gap-2 text-xs font-semibold backdrop-blur-md transition-all cursor-pointer"
-                        :class="employeeFilter !== 'all' ? 'bg-zinc-900 text-white font-bold hover:bg-zinc-800 hover:text-white border-zinc-900 shadow-sm' : ''"
+                        class="h-10 px-3.5 sm:px-4 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-900/80 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-zinc-100 border border-white/80 dark:border-zinc-800 shadow-xs flex items-center gap-2 text-xs font-semibold backdrop-blur-md transition-all cursor-pointer"
+                        :class="employeeFilter !== 'all' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-bold hover:bg-zinc-800 dark:hover:bg-zinc-100 border-zinc-900 dark:border-white shadow-sm' : ''"
                         title="Pilih Filter Kategori / Divisi"
                     >
                         <!-- Dynamic Indicator: Status Dot or Category Icon -->
@@ -614,7 +678,7 @@
                         <svg 
                             x-show="['all', 'tech', 'marketing', 'finance'].includes(employeeFilter)" 
                             class="w-3.5 h-3.5 shrink-0" 
-                            :class="employeeFilter !== 'all' ? 'text-white' : 'text-slate-500'"
+                            :class="employeeFilter !== 'all' ? (darkMode ? 'text-zinc-950' : 'text-white') : 'text-slate-500 dark:text-zinc-400'"
                             fill="none" 
                             stroke="currentColor" 
                             viewBox="0 0 24 24"
@@ -638,7 +702,7 @@
                             class="w-3.5 h-3.5 transition-transform duration-200" 
                             :class="[
                                 filterDropdownOpen ? 'rotate-180' : '',
-                                employeeFilter !== 'all' ? 'text-white/70' : 'text-slate-400'
+                                employeeFilter !== 'all' ? (darkMode ? 'text-zinc-950/70' : 'text-white/70') : 'text-slate-400 dark:text-zinc-500'
                             ]"
                             fill="none" 
                             stroke="currentColor" 
@@ -658,26 +722,26 @@
                         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                         x-transition:leave-end="opacity-0 translate-y-2 scale-95"
                         x-cloak
-                        class="absolute right-0 top-full mt-2 w-60 bg-white/95 backdrop-blur-2xl border border-white/90 rounded-2xl shadow-xl shadow-slate-900/10 p-1.5 z-40 overflow-hidden"
+                        class="absolute right-0 top-full mt-2 w-60 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-white/90 dark:border-zinc-800 rounded-2xl shadow-xl shadow-slate-900/10 dark:shadow-black/50 p-1.5 z-40 overflow-hidden"
                     >
                         <!-- Option: Semua -->
                         <button 
                             type="button" 
                             @click="employeeFilter = 'all'; currentPage = 1; filterDropdownOpen = false"
                             class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer group"
-                            :class="employeeFilter === 'all' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                            :class="employeeFilter === 'all' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold' : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'"
                         >
                             <div class="flex items-center gap-2">
-                                <svg class="w-3.5 h-3.5" :class="employeeFilter === 'all' ? 'text-white' : 'text-slate-400 group-hover:text-slate-700'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-3.5 h-3.5" :class="employeeFilter === 'all' ? (darkMode ? 'text-zinc-950' : 'text-white') : 'text-slate-400 dark:text-zinc-500 group-hover:text-slate-700 dark:group-hover:text-zinc-300'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                                 </svg>
                                 <span>Tampilkan Semua</span>
                             </div>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.length"></span>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'all' ? (darkMode ? 'bg-black/15 text-zinc-950' : 'bg-white/20 text-white') : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-mono'" x-text="activeEmployees.length"></span>
                         </button>
 
                         <!-- Group Label: Status Aktivitas -->
-                        <div class="px-3 pt-2.5 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        <div class="px-3 pt-2.5 pb-1 text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
                             Status Aktivitas
                         </div>
 
@@ -686,13 +750,13 @@
                             type="button" 
                             @click="employeeFilter = 'deep_work'; currentPage = 1; filterDropdownOpen = false"
                             class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
-                            :class="employeeFilter === 'deep_work' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                            :class="employeeFilter === 'deep_work' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold' : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'"
                         >
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
                                 <span>Deep Work</span>
                             </div>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'deep_work' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.category === 'deep_work').length"></span>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'deep_work' ? (darkMode ? 'bg-black/15 text-zinc-950' : 'bg-white/20 text-white') : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-mono'" x-text="activeEmployees.filter(e => e.category === 'deep_work').length"></span>
                         </button>
 
                         <!-- Option: In Meeting -->
@@ -700,13 +764,13 @@
                             type="button" 
                             @click="employeeFilter = 'meeting'; currentPage = 1; filterDropdownOpen = false"
                             class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
-                            :class="employeeFilter === 'meeting' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                            :class="employeeFilter === 'meeting' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold' : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'"
                         >
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
                                 <span>In Meeting</span>
                             </div>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'meeting' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.category === 'meeting').length"></span>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'meeting' ? (darkMode ? 'bg-black/15 text-zinc-950' : 'bg-white/20 text-white') : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-mono'" x-text="activeEmployees.filter(e => e.category === 'meeting').length"></span>
                         </button>
 
                         <!-- Option: Review PR -->
@@ -714,20 +778,20 @@
                             type="button" 
                             @click="employeeFilter = 'review'; currentPage = 1; filterDropdownOpen = false"
                             class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
-                            :class="employeeFilter === 'review' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                            :class="employeeFilter === 'review' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold' : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'"
                         >
                             <div class="flex items-center gap-2">
                                 <span class="w-2 h-2 rounded-full bg-indigo-500 shrink-0"></span>
                                 <span>Review PR</span>
                             </div>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'review' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.category === 'review').length"></span>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'review' ? (darkMode ? 'bg-black/15 text-zinc-950' : 'bg-white/20 text-white') : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-mono'" x-text="activeEmployees.filter(e => e.category === 'review').length"></span>
                         </button>
 
                         <!-- Divider -->
-                        <div class="h-px bg-slate-100 my-1.5"></div>
+                        <div class="h-px bg-slate-100 dark:bg-zinc-800 my-1.5"></div>
 
                         <!-- Group Label: Divisi Kantor -->
-                        <div class="px-3 pt-1 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        <div class="px-3 pt-1 pb-1 text-[10px] font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-wider">
                             Divisi Kantor
                         </div>
 
@@ -736,13 +800,13 @@
                             type="button" 
                             @click="employeeFilter = 'tech'; currentPage = 1; filterDropdownOpen = false"
                             class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
-                            :class="employeeFilter === 'tech' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                            :class="employeeFilter === 'tech' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold' : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'"
                         >
                             <div class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-500 shrink-0"></span>
                                 <span>Technology</span>
                             </div>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'tech' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Technology').length"></span>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'tech' ? (darkMode ? 'bg-black/15 text-zinc-950' : 'bg-white/20 text-white') : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Technology').length"></span>
                         </button>
 
                         <!-- Option: Marketing -->
@@ -750,13 +814,13 @@
                             type="button" 
                             @click="employeeFilter = 'marketing'; currentPage = 1; filterDropdownOpen = false"
                             class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
-                            :class="employeeFilter === 'marketing' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                            :class="employeeFilter === 'marketing' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold' : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'"
                         >
                             <div class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-500 shrink-0"></span>
                                 <span>Marketing</span>
                             </div>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'marketing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Marketing').length"></span>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'marketing' ? (darkMode ? 'bg-black/15 text-zinc-950' : 'bg-white/20 text-white') : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Marketing').length"></span>
                         </button>
 
                         <!-- Option: Finance -->
@@ -764,13 +828,13 @@
                             type="button" 
                             @click="employeeFilter = 'finance'; currentPage = 1; filterDropdownOpen = false"
                             class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
-                            :class="employeeFilter === 'finance' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                            :class="employeeFilter === 'finance' ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-950 font-semibold' : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800'"
                         >
                             <div class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-500 shrink-0"></span>
                                 <span>Finance</span>
                             </div>
-                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'finance' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Finance').length"></span>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'finance' ? (darkMode ? 'bg-black/15 text-zinc-950' : 'bg-white/20 text-white') : 'bg-slate-100 dark:bg-zinc-800 text-slate-500 dark:text-zinc-400 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Finance').length"></span>
                         </button>
                     </div>
                 </div>
@@ -784,72 +848,56 @@
                     <!-- Top Step Row: Left Profile Tab (Avatar + Name & Role) + Fillet + Recessed Action Notch -->
                     <div class="flex items-end relative z-10 -mb-px">
                         <!-- Elevated Profile Tab: Translucent Glass Surface (No bottom border, no shadow-xs) -->
-                        <div class="bg-white/80 backdrop-blur-xl pt-3 pl-3.5 pr-4 pb-3 rounded-tl-[24px] rounded-tr-[20px] flex items-center gap-3 flex-1 min-w-0 border-t border-l border-white/80 border-b-0">
+                        <div class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl pt-3 pl-3.5 pr-4 pb-3 rounded-tl-[24px] rounded-tr-[20px] flex items-center gap-3 flex-1 min-w-0 border-t border-l border-white/80 dark:border-zinc-800/80 border-b-0 transition-colors">
                             <!-- Avatar with Live Online Indicator -->
                             <div class="relative shrink-0">
-                                <img :src="emp.avatar" :alt="emp.name" class="w-11 h-11 rounded-full object-cover ring-2 ring-white/90" loading="lazy">
+                                <img :src="emp.avatar" :alt="emp.name" class="w-11 h-11 rounded-full object-cover ring-2 ring-white/90 dark:ring-zinc-800" loading="lazy">
                                 <!-- Online Live Pulsing Dot -->
                                 <span class="absolute bottom-0 right-0 flex h-3.5 w-3.5">
                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 ring-2 ring-white"></span>
+                                    <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 ring-2 ring-white dark:ring-zinc-900"></span>
                                 </span>
                             </div>
 
-                            <!-- Employee Name & Role: Spacious & Comfortable -->
+                            <!-- Employee Name & Role: Spacious & Clean -->
                             <div class="min-w-0 flex-1 pr-1">
-                                <h3 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate leading-snug" x-text="emp.name"></h3>
-                                <div class="flex items-center gap-1.5 mt-0.5 min-w-0">
-                                    <p class="text-xs text-slate-500 leading-snug truncate" x-text="emp.role"></p>
-                                    <a 
-                                        x-show="emp.telegram"
-                                        :href="'https://t.me/' + emp.telegram" 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
-                                        @click.stop
-                                        class="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#229ED9] hover:text-[#1877a7] hover:underline shrink-0"
-                                        :title="'Buka Telegram @' + emp.telegram"
-                                    >
-                                        <span x-text="'@' + emp.telegram"></span>
-                                        <svg class="w-2.5 h-2.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                                        </svg>
-                                    </a>
-                                </div>
+                                <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-zinc-100 tracking-tight truncate leading-snug" x-text="emp.name"></h3>
+                                <p class="text-xs text-slate-500 dark:text-zinc-400 leading-snug truncate mt-0.5" x-text="emp.role"></p>
                             </div>
                         </div>
 
-                        <!-- Inverted Concave Fillet Curve (Smooth Matching Glass Fillet) -->
-                        <div class="w-[20px] h-[20px] text-white/80 shrink-0 self-end -ml-px relative z-10 pointer-events-none">
+                        <!-- Inverted Concave Fillet Curve (Smooth Matching Glass Fillet in Light & Dark Mode) -->
+                        <div class="w-[20px] h-[20px] text-white/80 dark:text-zinc-900/80 shrink-0 self-end -ml-px relative z-10 pointer-events-none transition-colors">
                             <svg viewBox="0 0 20 20" class="w-full h-full fill-current overflow-visible">
                                 <path d="M 0 0 C 0 11.046 8.954 20 20 20 L 0 20 Z" />
-                                <path d="M 0 0 C 0 11.046 8.954 20 20 20" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.2" />
+                                <path d="M 0 0 C 0 11.046 8.954 20 20 20" fill="none" class="stroke-white/80 dark:stroke-zinc-800/80" stroke-width="1.2" />
                             </svg>
                         </div>
 
-                        <!-- Notch Action Button: Direct Telegram Chat (Hover Green Micro-interaction) -->
+                        <!-- Notch Action Button: Direct Telegram Chat (Circle stays neutral glass, only Telegram icon changes) -->
                         <div class="w-14 shrink-0 flex items-center justify-end pb-3 pr-2.5 pl-1.5">
                             <a 
                                 :href="'https://t.me/' + (emp.telegram ? emp.telegram.replace('@', '') : '')"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target="_blank" 
+                                rel="noopener noreferrer" 
                                 @click.stop
-                                class="w-10 h-10 rounded-full bg-white/85 hover:bg-emerald-500 backdrop-blur-md border border-white/90 hover:border-emerald-400 text-slate-700 hover:text-white flex items-center justify-center transition-all duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-emerald-500/30 active:scale-95 cursor-pointer shrink-0 shadow-xs group/btn"
+                                class="w-10 h-10 rounded-full bg-white/85 dark:bg-zinc-800/80 border border-white/90 dark:border-zinc-700/80 flex items-center justify-center transition-transform duration-200 active:scale-95 cursor-pointer shrink-0 shadow-xs group/btn"
                                 :title="'Buka Telegram @' + (emp.telegram ? emp.telegram.replace('@', '') : '')"
                             >
-                                <svg class="w-5 h-5 transition-all duration-300 group-hover/btn:scale-110 group-hover/btn:-rotate-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                <svg class="w-4.5 h-4.5 text-[#229ED9] group-hover/btn:text-[#0088cc] dark:text-[#229ED9] dark:group-hover/btn:text-[#38bdf8] transition-all duration-300 group-hover/btn:scale-110 group-hover/btn:-rotate-6 -ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l-.313 4.693c.46 0 .663-.211.921-.46l2.211-2.15 4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
                                 </svg>
                             </a>
                         </div>
                     </div>
 
                     <!-- Main Card Body (Frosted Glass Effect - Seamlessly flowing from Profile Tab) -->
-                    <div class="bg-white/80 backdrop-blur-xl text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-xl hover:bg-white/85 border-b border-l border-r border-white/80 rounded-b-[24px] rounded-tr-[24px] p-4 sm:p-5 pt-3.5 relative transition-all flex-1 flex flex-col justify-between">
+                    <div class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl text-slate-800 dark:text-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.3)] hover:shadow-xl hover:bg-white/85 dark:hover:bg-zinc-900/95 border-b border-l border-r border-white/80 dark:border-zinc-800/80 rounded-b-[24px] rounded-tr-[24px] p-4 sm:p-5 pt-3.5 relative transition-all flex-1 flex flex-col justify-between">
                         <!-- Top Shelf Border (Only on the right notch, leaving the left under profile tab 100% borderless) -->
-                        <div class="absolute -top-px right-0 w-14 h-4 border-t border-white/80 rounded-tr-[24px] pointer-events-none"></div>
+                        <div class="absolute -top-px right-0 w-14 h-4 border-t border-white/80 dark:border-zinc-800/80 rounded-tr-[24px] pointer-events-none"></div>
                         <div>
-                            <!-- Live Activity Box (Sedang Mengerjakan) - Frosted Inset Surface -->
-                            <div class="p-3 rounded-2xl bg-white/60 backdrop-blur-sm border border-slate-200/60 shadow-xs transition-colors">
+                            <!-- Live Activity Box (Sedang Mengerjakan) - Frosted Inset Surface (Optimized blur pass) -->
+                            <div class="p-3 rounded-2xl bg-white/70 dark:bg-zinc-950/70 border border-slate-200/60 dark:border-zinc-800/80 shadow-xs transition-colors">
                                 <div class="flex items-center justify-between mb-1.5">
                                     <div class="flex items-center gap-1.5">
                                         <span 
@@ -860,22 +908,22 @@
                                                 'bg-indigo-500 animate-pulse': emp.category === 'review'
                                             }"
                                         ></span>
-                                        <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500">Sedang Mengerjakan:</span>
+                                        <span class="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-zinc-400">Sedang Mengerjakan:</span>
                                     </div>
-                                    <span class="text-[10px] font-mono text-slate-400" x-text="emp.online_duration"></span>
+                                    <span class="text-[10px] font-mono text-slate-400 dark:text-zinc-500" x-text="emp.online_duration"></span>
                                 </div>
-                                <p class="text-xs font-semibold text-slate-900 line-clamp-2 leading-relaxed" x-text="emp.current_activity"></p>
+                                <p class="text-xs font-semibold text-slate-900 dark:text-zinc-200 line-clamp-2 leading-relaxed" x-text="emp.current_activity"></p>
                             </div>
                         </div>
 
                         <!-- Footer Row: Tools Pills (left) & Status Label with Dots (right) -->
-                        <div class="flex items-end justify-between pt-3 mt-3 border-t border-slate-200/50">
+                        <div class="flex items-end justify-between pt-3 mt-3 border-t border-slate-200/50 dark:border-zinc-800/60">
                             <!-- Left: Tools / App -->
                             <div>
-                                <span class="text-[10px] text-slate-400 font-semibold block mb-1">Tools / App</span>
+                                <span class="text-[10px] text-slate-400 dark:text-zinc-500 font-semibold block mb-1">Tools / App</span>
                                 <div class="flex items-center space-x-1">
                                     <template x-for="tool in emp.tools" :key="tool">
-                                        <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-white/80 text-slate-700 border border-slate-200/60 shadow-2xs" x-text="tool"></span>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-white/80 dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border border-slate-200/60 dark:border-zinc-700/60 shadow-2xs" x-text="tool"></span>
                                     </template>
                                 </div>
                             </div>
@@ -885,9 +933,9 @@
                                 <span 
                                     class="text-xs font-semibold block mb-1.5"
                                     :class="{
-                                        'text-emerald-700': emp.category === 'deep_work',
-                                        'text-amber-700': emp.category === 'meeting',
-                                        'text-indigo-700': emp.category === 'review'
+                                        'text-emerald-700 dark:text-emerald-400': emp.category === 'deep_work',
+                                        'text-amber-700 dark:text-amber-400': emp.category === 'meeting',
+                                        'text-indigo-700 dark:text-indigo-400': emp.category === 'review'
                                     }"
                                     x-text="emp.status_label"
                                 ></span>
@@ -899,7 +947,7 @@
                                             :class="{
                                                 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]': dot === 'green',
                                                 'bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.5)]': dot === 'orange',
-                                                'bg-slate-300': dot === 'gray'
+                                                'bg-slate-300 dark:bg-zinc-700': dot === 'gray'
                                             }"
                                         ></span>
                                     </template>
@@ -915,19 +963,19 @@
         <div 
             x-show="filteredEmployees().length === 0"
             x-cloak
-            class="py-16 text-center rounded-3xl bg-white/60 backdrop-blur-md border border-white/80 p-8 shadow-xs"
+            class="py-16 text-center rounded-3xl bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md border border-white/80 dark:border-zinc-800 p-8 shadow-xs"
         >
-            <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto mb-3">
+            <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-400 dark:text-zinc-500 mx-auto mb-3">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
-            <h4 class="text-sm font-bold text-slate-800">Tidak ada rekan kerja ditemukan</h4>
-            <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Tidak ditemukan karyawan yang cocok dengan filter atau kata kunci pencarian saat ini.</p>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-zinc-200">Tidak ada rekan kerja ditemukan</h4>
+            <p class="text-xs text-slate-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">Tidak ditemukan karyawan yang cocok dengan filter atau kata kunci pencarian saat ini.</p>
             <button 
                 type="button" 
                 @click="employeeFilter = 'all'; employeeSearch = ''; currentPage = 1"
-                class="mt-4 px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition-all cursor-pointer shadow-xs"
+                class="mt-4 px-4 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-950 text-xs font-semibold transition-all cursor-pointer shadow-xs"
             >
                 Reset Semua Filter
             </button>
@@ -940,16 +988,16 @@
             x-transition:enter-start="opacity-0 translate-y-2"
             x-transition:enter-end="opacity-100 translate-y-0"
             x-cloak
-            class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 shadow-xs"
+            class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-white/80 dark:border-zinc-800 shadow-xs"
         >
             <!-- Info Text: Menampilkan X - Y dari Total -->
-            <div class="text-xs text-slate-600 font-medium">
+            <div class="text-xs text-slate-600 dark:text-zinc-400 font-medium">
                 Menampilkan 
-                <span class="font-bold text-slate-900 font-mono" x-text="((currentPage - 1) * perPage) + 1"></span>
+                <span class="font-bold text-slate-900 dark:text-zinc-100 font-mono" x-text="((currentPage - 1) * perPage) + 1"></span>
                 -
-                <span class="font-bold text-slate-900 font-mono" x-text="Math.min(currentPage * perPage, filteredEmployees().length)"></span>
+                <span class="font-bold text-slate-900 dark:text-zinc-100 font-mono" x-text="Math.min(currentPage * perPage, filteredEmployees().length)"></span>
                 dari 
-                <span class="font-bold text-slate-900 font-mono" x-text="filteredEmployees().length"></span>
+                <span class="font-bold text-slate-900 dark:text-zinc-100 font-mono" x-text="filteredEmployees().length"></span>
                 rekan kerja
             </div>
 
@@ -960,8 +1008,8 @@
                     type="button" 
                     @click="goToPage(currentPage - 1)"
                     :disabled="currentPage === 1"
-                    :class="currentPage === 1 ? 'opacity-40 cursor-not-allowed text-slate-400' : 'hover:bg-white text-slate-700 hover:text-slate-900 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95'"
-                    class="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white/80 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                    :class="currentPage === 1 ? 'opacity-40 cursor-not-allowed text-slate-400 dark:text-zinc-600' : 'hover:bg-white dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95'"
+                    class="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-zinc-800/80 text-xs font-semibold flex items-center gap-1.5 transition-all"
                 >
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -977,8 +1025,8 @@
                             @click="goToPage(p)"
                             class="w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center font-mono"
                             :class="currentPage === p 
-                                ? 'bg-zinc-900 text-white shadow-xs' 
-                                : 'bg-white/80 hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-2xs active:scale-95'"
+                                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-950 shadow-xs' 
+                                : 'bg-white/80 hover:bg-white dark:bg-zinc-800/80 dark:hover:bg-zinc-700 text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-zinc-100 border border-slate-200 dark:border-zinc-700 shadow-2xs active:scale-95'"
                             x-text="p"
                         ></button>
                     </template>
@@ -989,8 +1037,8 @@
                     type="button" 
                     @click="goToPage(currentPage + 1)"
                     :disabled="currentPage === totalPages()"
-                    :class="currentPage === totalPages() ? 'opacity-40 cursor-not-allowed text-slate-400' : 'hover:bg-white text-slate-700 hover:text-slate-900 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95'"
-                    class="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white/80 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                    :class="currentPage === totalPages() ? 'opacity-40 cursor-not-allowed text-slate-400 dark:text-zinc-600' : 'hover:bg-white dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95'"
+                    class="px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-zinc-800/80 text-xs font-semibold flex items-center gap-1.5 transition-all"
                 >
                     <span>Selanjutnya</span>
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1004,136 +1052,34 @@
 
 
     <!-- ========================================== -->
-    <!-- 3. MODAL: CREATE NEW TASK / LEAD          -->
-    <!-- ========================================== -->
-    <div x-show="newTaskModalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div @click="newTaskModalOpen = false" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
-
-        <div class="relative bg-white/95 backdrop-blur-2xl rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-white/80 z-10 overflow-hidden text-slate-900" x-data="{
-            newTitle: '',
-            newType: 'Zoom Meeting',
-            newAssignee: 'Budi Pratama',
-            newSubtitle: 'Hari ini pukul 15:00',
-            newCategory: 'hot',
-            submitNewTask() {
-                if (!this.newTitle) { alert('Harap isi judul tugas!'); return; }
-                newTaskModalOpen = false;
-                showToast('Tugas baru berhasil ditambahkan!');
-                this.newTitle = '';
-            }
-        }">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-zinc-100 text-zinc-900 flex items-center justify-center font-bold">
-                        +
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-slate-900">Buat Tugas Baru (New Task)</h3>
-                        <p class="text-xs text-slate-500">Tambahkan aktivitas operasional ke workspace</p>
-                    </div>
-                </div>
-                <button @click="newTaskModalOpen = false" class="text-slate-400 hover:text-slate-700 text-xl font-bold cursor-pointer">&times;</button>
-            </div>
-
-            <form @submit.prevent="submitNewTask()" class="mt-5 space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Judul Tugas / Aktivitas</label>
-                    <input 
-                        type="text" 
-                        x-model="newTitle" 
-                        placeholder="Contoh: Zoom Meeting Klien Baru" 
-                        required
-                        class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 text-xs"
-                    >
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Jenis Aktivitas</label>
-                        <select 
-                            x-model="newType"
-                            class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:border-zinc-900"
-                        >
-                            <option value="Zoom Meeting">Zoom Meeting (Video Call)</option>
-                            <option value="Send Proposal">Send Proposal (Dokumen)</option>
-                            <option value="Send Email">Send Email (Surat Elektronik)</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prioritas / Kategori</label>
-                        <select 
-                            x-model="newCategory"
-                            class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-xs focus:outline-none focus:border-zinc-900"
-                        >
-                            <option value="hot">🔥 Hot Priority</option>
-                            <option value="high">High Priority</option>
-                            <option value="medium">Medium Priority</option>
-                            <option value="low">Low Priority</option>
-                            <option value="overdue">Overdue</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Waktu / Jadwal</label>
-                    <input 
-                        type="text" 
-                        x-model="newSubtitle" 
-                        placeholder="Contoh: 28.12.2023 at 2:27 PM" 
-                        class="w-full px-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-zinc-900 text-xs"
-                    >
-                </div>
-
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-end space-x-2">
-                    <button 
-                        type="button" 
-                        @click="newTaskModalOpen = false" 
-                        class="px-4 py-2 rounded-full text-xs font-medium text-slate-500 hover:text-slate-800 cursor-pointer"
-                    >
-                        Batal
-                    </button>
-                    <button 
-                        type="submit" 
-                        class="px-5 py-2 rounded-full text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 shadow-md transition-all active:scale-95 cursor-pointer"
-                    >
-                        Simpan Tugas
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- ========================================== -->
-    <!-- 4. MODAL: EMPLOYEE ACTIVITY DETAIL VIEW   -->
+    <!-- 3. MODAL: EMPLOYEE ACTIVITY DETAIL VIEW   -->
     <!-- ========================================== -->
     <div x-show="selectedEmployee" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div @click="selectedEmployee = null" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+        <div @click="selectedEmployee = null" class="fixed inset-0 bg-slate-900/50 dark:bg-black/70 backdrop-blur-xs"></div>
 
-        <div class="relative bg-white/95 backdrop-blur-2xl rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-white/80 z-10 overflow-hidden text-slate-900">
+        <div class="relative bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-white/80 dark:border-zinc-800 z-10 overflow-hidden text-slate-900 dark:text-zinc-100">
             <template x-if="selectedEmployee">
                 <div>
                     <!-- Modal Header -->
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
                         <div class="flex items-center space-x-3.5">
                             <div class="relative">
                                 <img :src="selectedEmployee.avatar" class="w-13 h-13 rounded-full object-cover ring-2 ring-emerald-500/50">
                                 <span class="absolute bottom-0 right-0 flex h-3.5 w-3.5">
                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 ring-2 ring-white"></span>
+                                    <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 ring-2 ring-white dark:ring-zinc-900"></span>
                                 </span>
                             </div>
                             <div>
-                                <h3 class="text-base font-bold text-slate-900 tracking-tight" x-text="selectedEmployee.name"></h3>
-                                <p class="text-xs text-slate-500" x-text="selectedEmployee.role + ' • ' + selectedEmployee.division"></p>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-zinc-100 tracking-tight" x-text="selectedEmployee.name"></h3>
+                                <p class="text-xs text-slate-500 dark:text-zinc-400" x-text="selectedEmployee.role + ' • ' + selectedEmployee.division"></p>
                             </div>
                         </div>
-                        <button @click="selectedEmployee = null" class="text-slate-400 hover:text-slate-700 text-xl font-bold cursor-pointer">&times;</button>
+                        <button @click="selectedEmployee = null" class="text-slate-400 dark:text-zinc-500 hover:text-slate-700 dark:hover:text-zinc-200 text-xl font-bold cursor-pointer">&times;</button>
                     </div>
 
                     <!-- Live Activity Banner -->
-                    <div class="mt-4 p-4 rounded-2xl bg-slate-50/80 border border-slate-200">
+                    <div class="mt-4 p-4 rounded-2xl bg-slate-50/80 dark:bg-zinc-950/60 border border-slate-200 dark:border-zinc-800">
                         <div class="flex items-center justify-between mb-2">
                             <div class="flex items-center gap-2">
                                 <span 
@@ -1144,51 +1090,51 @@
                                         'bg-indigo-500 animate-pulse': selectedEmployee.category === 'review'
                                     }"
                                 ></span>
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700">Aktivitas Saat Ini</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-zinc-300">Aktivitas Saat Ini</span>
                             </div>
-                            <span class="text-xs font-mono text-slate-500" x-text="'Durasi: ' + selectedEmployee.online_duration"></span>
+                            <span class="text-xs font-mono text-slate-500 dark:text-zinc-400" x-text="'Durasi: ' + selectedEmployee.online_duration"></span>
                         </div>
-                        <h4 class="text-sm font-bold text-slate-900 mb-1" x-text="selectedEmployee.current_activity"></h4>
-                        <p class="text-xs text-slate-600 leading-relaxed" x-text="selectedEmployee.activity_detail"></p>
+                        <h4 class="text-sm font-bold text-slate-900 dark:text-zinc-100 mb-1" x-text="selectedEmployee.current_activity"></h4>
+                        <p class="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed" x-text="selectedEmployee.activity_detail"></p>
                     </div>
 
                     <!-- Details Metadata -->
                     <div class="mt-4 space-y-2.5 text-xs">
-                        <div class="flex justify-between py-2 border-b border-slate-100">
-                            <span class="text-slate-500">Status Operasional:</span>
+                        <div class="flex justify-between py-2 border-b border-slate-100 dark:border-zinc-800">
+                            <span class="text-slate-500 dark:text-zinc-400">Status Operasional:</span>
                             <span 
                                 class="font-bold"
                                 :class="{
-                                    'text-emerald-700': selectedEmployee.category === 'deep_work',
-                                    'text-amber-700': selectedEmployee.category === 'meeting',
-                                    'text-indigo-700': selectedEmployee.category === 'review'
+                                    'text-emerald-700 dark:text-emerald-400': selectedEmployee.category === 'deep_work',
+                                    'text-amber-700 dark:text-amber-400': selectedEmployee.category === 'meeting',
+                                    'text-indigo-700 dark:text-indigo-400': selectedEmployee.category === 'review'
                                 }"
                                 x-text="selectedEmployee.status_label"
                             ></span>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-100">
-                            <span class="text-slate-500">Software / Tools Dipakai:</span>
+                        <div class="flex justify-between py-2 border-b border-slate-100 dark:border-zinc-800">
+                            <span class="text-slate-500 dark:text-zinc-400">Software / Tools Dipakai:</span>
                             <div class="flex gap-1.5">
                                 <template x-for="t in selectedEmployee.tools" :key="t">
-                                    <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200" x-text="t"></span>
+                                    <span class="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700" x-text="t"></span>
                                 </template>
                             </div>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-100">
-                            <span class="text-slate-500">Email Kantor:</span>
-                            <span class="text-slate-700 font-mono" x-text="selectedEmployee.email"></span>
+                        <div class="flex justify-between py-2 border-b border-slate-100 dark:border-zinc-800">
+                            <span class="text-slate-500 dark:text-zinc-400">Email Kantor:</span>
+                            <span class="text-slate-700 dark:text-zinc-300 font-mono" x-text="selectedEmployee.email"></span>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-100">
-                            <span class="text-slate-500">Kontak Internal:</span>
-                            <span class="text-slate-700 font-mono" x-text="selectedEmployee.phone"></span>
+                        <div class="flex justify-between py-2 border-b border-slate-100 dark:border-zinc-800">
+                            <span class="text-slate-500 dark:text-zinc-400">Kontak Internal:</span>
+                            <span class="text-slate-700 dark:text-zinc-300 font-mono" x-text="selectedEmployee.phone"></span>
                         </div>
-                        <div class="flex justify-between py-2 border-b border-slate-100" x-show="selectedEmployee.telegram">
-                            <span class="text-slate-500">Akun Telegram:</span>
+                        <div class="flex justify-between py-2 border-b border-slate-100 dark:border-zinc-800" x-show="selectedEmployee.telegram">
+                            <span class="text-slate-500 dark:text-zinc-400">Akun Telegram:</span>
                             <a 
                                 :href="'https://t.me/' + selectedEmployee.telegram" 
                                 target="_blank" 
-                                rel="noopener noreferrer"
-                                class="text-[#229ED9] hover:underline font-bold flex items-center gap-1 font-mono text-xs"
+                                rel="noopener noreferrer" 
+                                class="text-[#229ED9] dark:text-[#38bdf8] hover:underline font-bold flex items-center gap-1 font-mono text-xs"
                             >
                                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                                     <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.536-.196 1.006.128.832.942z"/>
@@ -1206,10 +1152,16 @@
                         <button 
                             type="button" 
                             @click="selectedEmployee = null" 
-                            class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold cursor-pointer"
+                            class="px-4 py-2 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 hover:bg-slate-200 dark:hover:bg-zinc-700 text-xs font-semibold cursor-pointer"
                         >
                             Tutup
                         </button>
+                        <a 
+                            :href="'{{ url('employees') }}/' + selectedEmployee.id" 
+                            class="px-4 py-2 rounded-full bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-700 dark:text-zinc-300 hover:bg-slate-50 dark:hover:bg-zinc-700 text-xs font-semibold cursor-pointer shadow-xs transition-colors"
+                        >
+                            Buka Profil Karyawan
+                        </a>
                         <template x-if="selectedEmployee.telegram">
                             <a 
                                 :href="'https://t.me/' + selectedEmployee.telegram.replace('@', '')" 

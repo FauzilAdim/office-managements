@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\TaskStatus;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Division;
 use App\Models\User;
@@ -47,6 +48,11 @@ class EmployeeController extends Controller
         }
 
         $divisions = Division::all();
+
+        // Eager load active tasks with creator to eliminate N+1 queries in the loop
+        $employees->load([
+            'assignedTasks' => fn ($q) => $q->where('status', TaskStatus::InProgress->value)->with('creator')->latest('started_at'),
+        ]);
 
         return view('employees.index', [
             'employees' => $employees,

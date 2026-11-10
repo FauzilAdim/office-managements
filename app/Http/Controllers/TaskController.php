@@ -35,7 +35,7 @@ class TaskController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $query = Task::query()->with(['assignee.division', 'creator']);
+        $query = Task::query()->with(['assignee.division', 'creator'])->withCount('logs');
 
         if ($user->isDirector()) {
             // Full access: see all tasks
