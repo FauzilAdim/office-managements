@@ -2,6 +2,9 @@
     employeeFilter: 'all',
     employeeSearch: '',
     showEmployeeSearch: false,
+    filterDropdownOpen: false,
+    currentPage: 1,
+    perPage: 20,
     taskFilter: 'all',
     taskSearch: '',
     showTaskSearch: false,
@@ -11,9 +14,10 @@
     activeEmployees: [
         {
             id: 1,
-            name: 'Fauzil Adzim, S.Tr.Kom.',
+            name: 'Muhammad Fauzil Adzim',
             role: 'Lead Architect & Tech Lead',
             division: 'Technology',
+            telegram: 'MuhammadFauzil',
             avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Refactoring Auth Gateway & Token Security',
             activity_detail: 'Optimasi latency microservices dan enkripsi JWT authentication session.',
@@ -28,10 +32,11 @@
         },
         {
             id: 2,
-            name: 'Ahmad Fikri',
+            name: 'Arvi Yusuf',
             role: 'Senior Backend Engineer',
             division: 'Technology',
-            avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&h=256&q=80',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Optimasi Query Database & Redis Cache',
             activity_detail: 'Indexing query transaksi berat dan benchmark throughput response time.',
             status_label: 'Deep Work',
@@ -40,14 +45,15 @@
             tools: ['Laravel', 'Postgres'],
             status_color: 'emerald',
             dots: ['green', 'green', 'green', 'orange', 'green'],
-            email: 'ahmad.fikri@office.com',
+            email: 'arvi.yusuf@office.com',
             phone: '+62 813-2345-6789'
         },
         {
             id: 3,
-            name: 'Anisa Maharani, S.Kom.',
+            name: 'Chasyanda Putri',
             role: 'QA Automation Lead',
             division: 'Technology',
+            telegram: 'MuhammadFauzil',
             avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Automated Regression Suite Testing',
             activity_detail: 'Menjalankan skenario E2E testing untuk modul payroll dan audit workflow.',
@@ -57,14 +63,15 @@
             tools: ['Pest PHP', 'Cypress'],
             status_color: 'emerald',
             dots: ['green', 'green', 'green', 'green', 'orange'],
-            email: 'anisa.maharani@office.com',
+            email: 'chasyanda@office.com',
             phone: '+62 814-3456-7890'
         },
         {
             id: 4,
-            name: 'Ir. Hendra Gunawan, M.T.',
+            name: 'Ir. Farjauh Gunawan',
             role: 'VP of Technology',
             division: 'Technology',
+            telegram: 'MuhammadFauzil',
             avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Sprint Planning & Cloud Infrastructure Sync',
             activity_detail: 'Sinkronisasi roadmap Q4 dan alokasi resource cluster cloud bersama leads.',
@@ -74,14 +81,15 @@
             tools: ['Meet', 'AWS Cloud'],
             status_color: 'amber',
             dots: ['orange', 'orange', 'orange', 'green', 'green'],
-            email: 'hendra.gunawan@office.com',
+            email: 'farjauh@office.com',
             phone: '+62 811-1234-5678'
         },
         {
             id: 5,
-            name: 'Dian Sastrowardoyo, S.Ds.',
+            name: 'Nadzhar Sastrowardoyo',
             role: 'Brand & UI/UX Design Lead',
             division: 'Marketing',
+            telegram: 'MuhammadFauzil',
             avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Design System v2.4 Components di Figma',
             activity_detail: 'Merapikan token typography, icon kit, dan prototype interaktif dashboard.',
@@ -91,14 +99,15 @@
             tools: ['Figma', 'Notion'],
             status_color: 'emerald',
             dots: ['green', 'green', 'green', 'green', 'green'],
-            email: 'dian.sastro@office.com',
+            email: 'nadzhar@office.com',
             phone: '+62 812-9876-5432'
         },
         {
             id: 6,
-            name: 'Reza Rahadian, S.Kom.',
+            name: 'Dzaky Fadhil Pratama',
             role: 'Software Engineering Manager',
             division: 'Technology',
+            telegram: 'MuhammadFauzil',
             avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Review Pull Request & Code Audit Security',
             activity_detail: 'Memvalidasi merge request fitur baru dan kepatuhan standar clean code.',
@@ -108,49 +117,16 @@
             tools: ['GitHub', 'Linear'],
             status_color: 'purple',
             dots: ['green', 'green', 'orange', 'orange', 'green'],
-            email: 'reza.rahadian@office.com',
+            email: 'dzaky.fadhil@office.com',
             phone: '+62 815-4567-8901'
         },
         {
             id: 7,
-            name: 'Siti Nurhaliza, S.E., M.M.',
-            role: 'VP of Marketing & Growth',
-            division: 'Marketing',
-            avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: 'Analisis Performance Campaign Q4 & Ads',
-            activity_detail: 'Evaluasi konversi channel digital dan penyesuaian strategi growth.',
-            status_label: 'In Meeting',
-            category: 'meeting',
-            online_duration: '1j 25m',
-            tools: ['Meet', 'Analytics'],
-            status_color: 'amber',
-            dots: ['orange', 'orange', 'green', 'green', 'gray'],
-            email: 'siti.nurhaliza@office.com',
-            phone: '+62 816-5678-9012'
-        },
-        {
-            id: 8,
-            name: 'Drs. Bambang Wijaya, Ak.',
-            role: 'VP of Finance & Operations',
-            division: 'Finance',
-            avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: 'Verifikasi Anggaran Operasional & Payroll',
-            activity_detail: 'Audit approval disbursement operasional kantor dan rekonsiliasi kas.',
-            status_label: 'Deep Work',
-            category: 'deep_work',
-            online_duration: '4j 40m',
-            tools: ['SAP ERP', 'Excel'],
-            status_color: 'emerald',
-            dots: ['green', 'green', 'green', 'green', 'green'],
-            email: 'bambang.wijaya@office.com',
-            phone: '+62 817-6789-0123'
-        },
-        {
-            id: 9,
-            name: 'Maya Anggraini, S.T.',
+            name: 'Andika Pratama',
             role: 'Frontend & Mobile Engineer',
             division: 'Technology',
-            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=256&h=256&q=80',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Slicing Dynamic Island Widget & Micro-physics',
             activity_detail: 'Optimasi viewport responsive, gesture event, dan transition physics.',
             status_label: 'Deep Work',
@@ -159,14 +135,15 @@
             tools: ['Tailwind', 'Flutter'],
             status_color: 'emerald',
             dots: ['green', 'green', 'green', 'green', 'green'],
-            email: 'maya.anggraini@office.com',
+            email: 'andika@office.com',
             phone: '+62 818-1234-5678'
         },
         {
-            id: 10,
-            name: 'Budi Santoso, S.Kom.',
+            id: 8,
+            name: 'Adkha Wildan',
             role: 'DevOps & SRE Specialist',
             division: 'Technology',
+            telegram: 'MuhammadFauzil',
             avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=256&h=256&q=80',
             current_activity: 'Monitoring Cluster Kubernetes & Pod Scaling',
             activity_detail: 'Benchmarking load balancer, failover testing, dan konfigurasi Grafana alert.',
@@ -176,110 +153,296 @@
             tools: ['Kubernetes', 'Grafana'],
             status_color: 'emerald',
             dots: ['green', 'green', 'green', 'orange', 'green'],
-            email: 'budi.santoso@office.com',
+            email: 'adkha.wildan@office.com',
             phone: '+62 819-2345-6789'
         },
         {
-            id: 11,
-            name: 'Citra Kirana, S.I.Kom.',
-            role: 'Head of People & HR Operations',
-            division: 'Operations',
-            avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: '1-on-1 Performance Sync & Talent Review',
-            activity_detail: 'Evaluasi KPI bulanan divisi teknis dan finalisasi kontrak karyawan baru.',
+            id: 9,
+            name: 'Reza Rahadian, S.Kom.',
+            role: 'Software Engineering Manager',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Review Pull Request & Architecture RFC',
+            activity_detail: 'Evaluasi kesiapan release sprint v2.4 dan branch merging.',
+            status_label: 'Reviewing PR',
+            category: 'review',
+            online_duration: '3j 10m',
+            tools: ['GitHub', 'Linear'],
+            status_color: 'purple',
+            dots: ['green', 'green', 'orange', 'green', 'green'],
+            email: 'reza.rahadian@office.com',
+            phone: '+62 821-4455-6677'
+        },
+        {
+            id: 10,
+            name: 'Siti Nurhaliza, S.E., M.M.',
+            role: 'VP of Marketing & Growth',
+            division: 'Marketing',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Analisis Performance Campaign Q4 & Ads',
+            activity_detail: 'Evaluasi konversi CAC, ROI iklan Meta & Google Ads.',
             status_label: 'In Meeting',
             category: 'meeting',
-            online_duration: '1j 45m',
-            tools: ['Google Meet', 'BambooHR'],
+            online_duration: '1j 25m',
+            tools: ['Analytics', 'Google Ads'],
             status_color: 'amber',
             dots: ['orange', 'orange', 'orange', 'green', 'green'],
-            email: 'citra.kirana@office.com',
-            phone: '+62 820-3456-7890'
+            email: 'siti.nurhaliza@office.com',
+            phone: '+62 813-1122-3344'
+        },
+        {
+            id: 11,
+            name: 'Drs. Bambang Wijaya, Ak.',
+            role: 'VP of Finance & Operations',
+            division: 'Finance',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Verifikasi Anggaran Operasional & Payroll',
+            activity_detail: 'Persetujuan reimbursement, pajak bulanan, dan cashflow forecast.',
+            status_label: 'Deep Work',
+            category: 'deep_work',
+            online_duration: '4j 40m',
+            tools: ['Excel', 'SAP'],
+            status_color: 'emerald',
+            dots: ['green', 'green', 'green', 'green', 'green'],
+            email: 'bambang.wijaya@office.com',
+            phone: '+62 811-5566-7788'
         },
         {
             id: 12,
-            name: 'Rian Pratama, S.E.',
-            role: 'Corporate Tax & Accounting Officer',
-            division: 'Finance',
-            avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: 'Rekonsiliasi Faktur Pajak & e-Faktur PPN',
-            activity_detail: 'Penyusunan SPT Masa, validasi bukti potong PPh 23, dan e-Billing Kemenkeu.',
-            status_label: 'Deep Work',
+            name: 'Dian Sastrowardoyo, S.Ds.',
+            role: 'Brand & Campaign Manager',
+            division: 'Marketing',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Supervisi Brand Guidelines & Asset Creative',
+            activity_detail: 'Review visual identity dan kurasi ilustrasi untuk campaign baru.',
+            status_label: 'Designing',
             category: 'deep_work',
-            online_duration: '2j 55m',
-            tools: ['DJP Online', 'Excel'],
+            online_duration: '2j 30m',
+            tools: ['Figma', 'Illustrator'],
             status_color: 'emerald',
             dots: ['green', 'green', 'green', 'green', 'green'],
-            email: 'rian.pratama@office.com',
-            phone: '+62 821-4567-8901'
+            email: 'dian.sastro@office.com',
+            phone: '+62 822-7788-9900'
         },
         {
             id: 13,
-            name: 'Nadia Putri, S.Ds.',
-            role: 'Motion & Design System Specialist',
-            division: 'Marketing',
-            avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: 'Animation Physics di Rive & Framer Prototype',
-            activity_detail: 'Simulasi transisi state hover, drag sheet, dan micro-feedback haptic.',
-            status_label: 'Designing',
+            name: 'Ahmad Fikri',
+            role: 'Senior Backend Developer',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Penyusunan API Gateway & Event Bus',
+            activity_detail: 'Implementasi message broker RabbitMQ untuk asinkronisasi proses.',
+            status_label: 'Deep Work',
             category: 'deep_work',
-            online_duration: '1j 35m',
-            tools: ['Rive', 'Framer'],
+            online_duration: '3j 15m',
+            tools: ['Go', 'RabbitMQ'],
             status_color: 'emerald',
-            dots: ['green', 'green', 'green', 'green', 'orange'],
-            email: 'nadia.putri@office.com',
-            phone: '+62 822-5678-9012'
+            dots: ['green', 'green', 'green', 'green', 'green'],
+            email: 'ahmad.fikri@office.com',
+            phone: '+62 878-1122-3344'
         },
         {
             id: 14,
-            name: 'Dimas Arya, S.Kom.',
-            role: 'Cyber Security & Pentest Specialist',
+            name: 'Citra Lestari',
+            role: 'Frontend UI/UX Specialist',
             division: 'Technology',
-            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: 'Vulnerability Scanning & OWASP API Audit',
-            activity_detail: 'Testing payload SQLi/XSS, validasi CORS policy, dan hardening Nginx proxy.',
-            status_label: 'Reviewing PR',
-            category: 'review',
-            online_duration: '3j 15m',
-            tools: ['Burp Suite', 'SonarQube'],
-            status_color: 'purple',
-            dots: ['green', 'green', 'orange', 'orange', 'green'],
-            email: 'dimas.arya@office.com',
-            phone: '+62 823-6789-0123'
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Refactoring Component Library & Storybook',
+            activity_detail: 'Peningkatan aksesibilitas WCAG dan dokumentasi UI token.',
+            status_label: 'Deep Work',
+            category: 'deep_work',
+            online_duration: '2j 05m',
+            tools: ['Vue.js', 'Tailwind'],
+            status_color: 'emerald',
+            dots: ['green', 'green', 'green', 'green', 'orange'],
+            email: 'citra.lestari@office.com',
+            phone: '+62 877-5566-7788'
         },
         {
             id: 15,
-            name: 'Kevin Sanjaya, S.Bns.',
-            role: 'Growth Marketing & Lead Acquisition',
-            division: 'Marketing',
-            avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: 'A/B Testing Funnel Landing Page & Ad Creatives',
-            activity_detail: 'Optimasi click-through-rate kampanye LinkedIn Ads dan Meta Ads manager.',
-            status_label: 'In Meeting',
-            category: 'meeting',
-            online_duration: '2j 05m',
-            tools: ['Meta Ads', 'Hotjar'],
-            status_color: 'amber',
-            dots: ['orange', 'orange', 'green', 'green', 'gray'],
-            email: 'kevin.sanjaya@office.com',
-            phone: '+62 824-7890-1234'
+            name: 'Bayu Setiawan',
+            role: 'QA Engineer & Security Tester',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Penetration Testing & Endpoint Fuzzing',
+            activity_detail: 'Audit vulnerability OWASP Top 10 dan vulnerability scan.',
+            status_label: 'Running Tests',
+            category: 'deep_work',
+            online_duration: '1j 40m',
+            tools: ['Postman', 'Burp Suite'],
+            status_color: 'emerald',
+            dots: ['green', 'green', 'green', 'orange', 'green'],
+            email: 'bayu.setiawan@office.com',
+            phone: '+62 896-1234-9988'
         },
         {
             id: 16,
-            name: 'Indah Permatasari, S.E.',
-            role: 'Financial Analyst & Budgeting Lead',
-            division: 'Finance',
+            name: 'Dewi Anggraini',
+            role: 'Creative Copywriter',
+            division: 'Marketing',
+            telegram: 'MuhammadFauzil',
             avatar: 'https://images.unsplash.com/photo-1548142813-c348350df52b?auto=format&fit=crop&w=256&h=256&q=80',
-            current_activity: 'Vendor Contract Review & Cloud Inventory',
-            activity_detail: 'Audit inventaris workstation engineer dan renewal lisensi cloud enterprise.',
+            current_activity: 'Drafting Launching Campaign Announcement',
+            activity_detail: 'Penulisan newsletter, press release, dan in-app notification copy.',
+            status_label: 'Writing',
+            category: 'deep_work',
+            online_duration: '2j 55m',
+            tools: ['Notion', 'Grammarly'],
+            status_color: 'emerald',
+            dots: ['green', 'green', 'green', 'green', 'green'],
+            email: 'dewi.anggraini@office.com',
+            phone: '+62 895-7788-9900'
+        },
+        {
+            id: 17,
+            name: 'Rian Santoso, S.I.Kom.',
+            role: 'Digital Campaign Lead',
+            division: 'Marketing',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Strategy Sync: Partnership & KOL Onboarding',
+            activity_detail: 'Koordinasi negosiasi rate card bersama agensi dan influencer.',
+            status_label: 'In Meeting',
+            category: 'meeting',
+            online_duration: '3j 30m',
+            tools: ['Zoom', 'Slack'],
+            status_color: 'amber',
+            dots: ['orange', 'orange', 'green', 'green', 'green'],
+            email: 'rian.santoso@office.com',
+            phone: '+62 819-3344-5566'
+        },
+        {
+            id: 18,
+            name: 'Anisa Maharani, S.Kom.',
+            role: 'QA Automation Lead',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'CI/CD Automated Test Pipeline Setup',
+            activity_detail: 'Integrasi GitHub Actions runner dengan parallel test jobs.',
             status_label: 'Deep Work',
             category: 'deep_work',
             online_duration: '4j 15m',
-            tools: ['Notion', 'SAP'],
+            tools: ['GitHub Actions', 'Docker'],
+            status_color: 'emerald',
+            dots: ['green', 'green', 'green', 'green', 'green'],
+            email: 'anisa.maharani@office.com',
+            phone: '+62 858-9876-5432'
+        },
+        {
+            id: 19,
+            name: 'Budi Pratama, M.B.A.',
+            role: 'Managing Director / CEO',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Executive Board Meeting: Quarterly Review',
+            activity_detail: 'Pemaparan key milestones, pertumbuhan pendapatan, dan ekspansi cabang.',
+            status_label: 'In Meeting',
+            category: 'meeting',
+            online_duration: '2j 40m',
+            tools: ['Meet', 'Keynote'],
+            status_color: 'amber',
+            dots: ['orange', 'orange', 'orange', 'orange', 'green'],
+            email: 'direktur@office.com',
+            phone: '+62 812-3456-7890'
+        },
+        {
+            id: 20,
+            name: 'Ir. Hendra Gunawan, M.T.',
+            role: 'VP of Technology',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Review Arsitektur SSO & Zero Trust Security',
+            activity_detail: 'Evaluasi kesiapan protokol OAuth2/OIDC untuk multi-cabang.',
+            status_label: 'Reviewing PR',
+            category: 'review',
+            online_duration: '4j 10m',
+            tools: ['Figma', 'AWS'],
+            status_color: 'purple',
+            dots: ['green', 'green', 'orange', 'green', 'green'],
+            email: 'vp.tech@office.com',
+            phone: '+62 812-9876-5432'
+        },
+        {
+            id: 21,
+            name: 'Kevin Sanjaya, S.Bns.',
+            role: 'Growth & Acquisition Specialist',
+            division: 'Marketing',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'A/B Testing Funnel Landing Page & Conversion',
+            activity_detail: 'Eksperimen variasi headline dan CTA pada halaman registrasi.',
+            status_label: 'Deep Work',
+            category: 'deep_work',
+            online_duration: '3j 25m',
+            tools: ['Mixpanel', 'Hotjar'],
+            status_color: 'emerald',
+            dots: ['green', 'green', 'green', 'green', 'green'],
+            email: 'kevin.sanjaya@office.com',
+            phone: '+62 812-4455-6677'
+        },
+        {
+            id: 22,
+            name: 'Indah Permatasari, S.E.',
+            role: 'Corporate Tax & Accounting Officer',
+            division: 'Finance',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Rekonsiliasi Faktur Pajak & e-Faktur PPN',
+            activity_detail: 'Pencocokan invoice vendor cloud dan pelaporan SPT Masa.',
+            status_label: 'Deep Work',
+            category: 'deep_work',
+            online_duration: '4j 15m',
+            tools: ['DJP Online', 'Excel'],
             status_color: 'emerald',
             dots: ['green', 'green', 'green', 'green', 'green'],
             email: 'indah.permatasari@office.com',
-            phone: '+62 825-8901-2345'
+            phone: '+62 813-7788-9900'
+        },
+        {
+            id: 23,
+            name: 'Maya Anggraini, S.T.',
+            role: 'Mobile iOS & Flutter Developer',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Optimasi Offline Storage & SQLite Cache',
+            activity_detail: 'Sinkronisasi background sync data saat kembali terkoneksi internet.',
+            status_label: 'Deep Work',
+            category: 'deep_work',
+            online_duration: '2j 10m',
+            tools: ['Flutter', 'Xcode'],
+            status_color: 'emerald',
+            dots: ['green', 'green', 'green', 'green', 'green'],
+            email: 'maya.anggraini@office.com',
+            phone: '+62 818-9900-1122'
+        },
+        {
+            id: 24,
+            name: 'Dimas Arya, S.Kom.',
+            role: 'Cyber Security & Network Engineer',
+            division: 'Technology',
+            telegram: 'MuhammadFauzil',
+            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&h=256&q=80',
+            current_activity: 'Vulnerability Scanning & OWASP API Audit',
+            activity_detail: 'Pengecekan WAF Cloudflare rules dan pengujian SSL certificate rotation.',
+            status_label: 'Auditing',
+            category: 'review',
+            online_duration: '3j 45m',
+            tools: ['Wireshark', 'Cloudflare'],
+            status_color: 'purple',
+            dots: ['green', 'green', 'green', 'orange', 'green'],
+            email: 'dimas.arya@office.com',
+            phone: '+62 815-2233-4455'
         }
     ],
     filteredEmployees() {
@@ -292,99 +455,31 @@
             else if (this.employeeFilter === 'marketing') matchesCat = emp.division === 'Marketing';
             else if (this.employeeFilter === 'finance') matchesCat = emp.division === 'Finance';
             
-            const q = this.employeeSearch.toLowerCase();
-            const matchesSearch = !this.employeeSearch || 
+            const q = this.employeeSearch.toLowerCase().trim();
+            const matchesSearch = !q || 
                 emp.name.toLowerCase().includes(q) || 
                 emp.role.toLowerCase().includes(q) || 
                 emp.current_activity.toLowerCase().includes(q) ||
+                (emp.telegram && emp.telegram.toLowerCase().includes(q.replace('@', ''))) ||
                 emp.division.toLowerCase().includes(q);
 
             return matchesCat && matchesSearch;
         });
     },
-    chatPanelOpen: false,
-    chatMaximized: false,
-    chatActiveEmployee: null,
-    chatInputMessage: '',
-    chatSearch: '',
-    chatConversations: {
-        2: [
-            { sender: 'other', text: 'Halo mas Fauzil, webhook Midtrans QRIS & BCA Virtual Account sudah selesai di-testing di sandbox.', time: '14:20' },
-            { sender: 'me', text: 'Mantap Fikri, coba cek idempotency key nya ya biar ga double charge saat network timeout.', time: '14:22' },
-            { sender: 'other', text: 'Siap mas, sudah dihandle pakai Redis lock dengan TTL 10 detik. Tinggal review PR.', time: '14:25' }
-        ],
-        3: [
-            { sender: 'other', text: 'Pest regression suite sudah selesai di branch test/payroll. Semua 40 tests lolos.', time: '13:45' },
-            { sender: 'me', text: 'Keren! Boleh minta tolong trigger ke CI pipeline staging sekarang?', time: '13:50' },
-            { sender: 'other', text: 'Sedang berjalan di GitHub Actions mas, estimasi 5 menit lagi selesai.', time: '13:52' }
-        ],
-        4: [
-            { sender: 'other', text: 'Fauzil, nanti jam 15:30 ada sync arsitektur SSO multi-cabang ya di Zoom.', time: '11:15' },
-            { sender: 'me', text: 'Siap pak Hendra, dokumen RFC dan diagram OAuth2 sudah saya siapkan.', time: '11:20' }
-        ],
-        6: [
-            { sender: 'other', text: 'PR refactor auth gateway sudah di-assign ke saya mas. Sore ini saya review komplit.', time: '10:05' },
-            { sender: 'me', text: 'Thanks mas Reza! Prioritas aman sebelum release ke staging besok.', time: '10:10' }
-        ]
+    paginatedEmployees() {
+        const start = (this.currentPage - 1) * this.perPage;
+        return this.filteredEmployees().slice(start, start + this.perPage);
     },
-    openChatWith(emp) {
-        this.chatActiveEmployee = emp;
-        this.chatPanelOpen = true;
-        if (!this.chatConversations[emp.id]) {
-            this.chatConversations[emp.id] = [
-                { sender: 'other', text: 'Halo! Saya sedang mengerjakan: ' + emp.current_activity + '. Ada yang perlu dikoordinasikan?', time: 'Baru saja' }
-            ];
-        }
-        this.$nextTick(() => {
-            this.scrollToChatBottom();
-            const input = document.getElementById('chatInputField');
-            if (input) input.focus();
-        });
+    totalPages() {
+        return Math.ceil(this.filteredEmployees().length / this.perPage) || 1;
     },
-    sendChatMessage() {
-        if (!this.chatInputMessage.trim() || !this.chatActiveEmployee) return;
-        const text = this.chatInputMessage.trim();
-        const empId = this.chatActiveEmployee.id;
-        if (!this.chatConversations[empId]) {
-            this.chatConversations[empId] = [];
-        }
-        const now = new Date();
-        const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        this.chatConversations[empId].push({
-            sender: 'me',
-            text: text,
-            time: timeStr
-        });
-        this.chatInputMessage = '';
-        this.$nextTick(() => {
-            this.scrollToChatBottom();
-        });
-        
-        setTimeout(() => {
-            if (this.chatConversations[empId]) {
-                const replies = [
-                    'Siap mas, segera saya tindak lanjuti!',
-                    'Noted mas, terima kasih arahannya. Segera saya update statusnya.',
-                    'Baik mas, nanti saya kabari lagi begitu ada progres.'
-                ];
-                const randomReply = replies[Math.floor(Math.random() * replies.length)];
-                const replyNow = new Date();
-                const replyTime = String(replyNow.getHours()).padStart(2, '0') + ':' + String(replyNow.getMinutes()).padStart(2, '0');
-                this.chatConversations[empId].push({
-                    sender: 'other',
-                    text: randomReply,
-                    time: replyTime
-                });
-                this.$nextTick(() => {
-                    this.scrollToChatBottom();
-                });
+    goToPage(page) {
+        if (page >= 1 && page <= this.totalPages()) {
+            this.currentPage = page;
+            const grid = document.getElementById('employeeGridContainer');
+            if (grid) {
+                grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-        }, 1100);
-    },
-    scrollToChatBottom() {
-        const container = document.getElementById('chatMessagesContainer');
-        if (container) {
-            container.scrollTop = container.scrollHeight;
         }
     }
 }">
@@ -475,6 +570,7 @@
                         x-cloak 
                         type="text" 
                         x-model="employeeSearch"
+                        @input="currentPage = 1"
                         placeholder="Cari karyawan / aktivitas..." 
                         class="ml-2 px-3.5 py-1.5 text-xs rounded-full bg-white/90 backdrop-blur-md border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900 w-48 shadow-xs"
                     >
@@ -483,7 +579,7 @@
                 <!-- Sliders Filter Reset Button -->
                 <button 
                     type="button" 
-                    @click="employeeFilter = 'all'; employeeSearch = ''; showToast('Filter direset ke Semua')"
+                    @click="employeeFilter = 'all'; employeeSearch = ''; currentPage = 1; filterDropdownOpen = false; showToast('Filter direset ke Semua')"
                     class="w-9 h-9 rounded-full bg-white/80 hover:bg-white backdrop-blur-md border border-white/80 shadow-xs flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
                     title="Reset Filter"
                 >
@@ -492,85 +588,198 @@
                     </svg>
                 </button>
 
-                <!-- Semua (Counter Dinamis) -->
-                <button 
-                    type="button" 
-                    @click="employeeFilter = 'all'"
-                    :class="employeeFilter === 'all' ? 'bg-zinc-900 text-white font-semibold shadow-sm' : 'bg-white/75 hover:bg-white text-slate-600 hover:text-slate-900 border border-white/80 backdrop-blur-md shadow-xs'"
-                    class="px-4 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer flex items-center gap-1"
-                >
-                    <span>Semua</span>
-                    <span class="text-[11px] opacity-80" x-text="'(' + activeEmployees.length + ')'"></span>
-                </button>
+                <!-- Modern Dropdown Filtering Menu (Framer-style Clean Dropdown) -->
+                <div class="relative" @click.outside="filterDropdownOpen = false">
+                    <!-- Dropdown Trigger Capsule Button -->
+                    <button 
+                        type="button" 
+                        @click="filterDropdownOpen = !filterDropdownOpen"
+                        class="h-9 px-3.5 sm:px-4 rounded-full bg-white/80 hover:bg-white text-slate-700 hover:text-slate-900 border border-white/80 shadow-xs flex items-center gap-2 text-xs font-semibold backdrop-blur-md transition-all cursor-pointer"
+                        :class="employeeFilter !== 'all' ? 'bg-zinc-900 text-white font-bold hover:bg-zinc-800 hover:text-white border-zinc-900 shadow-sm' : ''"
+                        title="Pilih Filter Kategori / Divisi"
+                    >
+                        <!-- Dynamic Indicator: Status Dot or Category Icon -->
+                        <span 
+                            x-show="employeeFilter === 'deep_work'" 
+                            class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 shadow-xs"
+                        ></span>
+                        <span 
+                            x-show="employeeFilter === 'meeting'" 
+                            class="w-2 h-2 rounded-full bg-amber-500 shrink-0 shadow-xs"
+                        ></span>
+                        <span 
+                            x-show="employeeFilter === 'review'" 
+                            class="w-2 h-2 rounded-full bg-indigo-500 shrink-0 shadow-xs"
+                        ></span>
+                        <svg 
+                            x-show="['all', 'tech', 'marketing', 'finance'].includes(employeeFilter)" 
+                            class="w-3.5 h-3.5 shrink-0" 
+                            :class="employeeFilter !== 'all' ? 'text-white' : 'text-slate-500'"
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
 
-                <!-- Deep Work (Bekerja) -->
-                <button 
-                    type="button" 
-                    @click="employeeFilter = 'deep_work'"
-                    :class="employeeFilter === 'deep_work' ? 'bg-zinc-900 text-white font-semibold shadow-sm' : 'bg-white/75 hover:bg-white text-slate-600 hover:text-slate-900 border border-white/80 backdrop-blur-md shadow-xs'"
-                    class="px-4 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer"
-                >
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>Deep Work</span>
-                </button>
+                        <!-- Label with dynamic count -->
+                        <span x-text="
+                            employeeFilter === 'all' ? 'Semua (' + activeEmployees.length + ')' :
+                            employeeFilter === 'deep_work' ? 'Deep Work (' + activeEmployees.filter(e => e.category === 'deep_work').length + ')' :
+                            employeeFilter === 'meeting' ? 'In Meeting (' + activeEmployees.filter(e => e.category === 'meeting').length + ')' :
+                            employeeFilter === 'review' ? 'Review PR (' + activeEmployees.filter(e => e.category === 'review').length + ')' :
+                            employeeFilter === 'tech' ? 'Tech (' + activeEmployees.filter(e => e.division === 'Technology').length + ')' :
+                            employeeFilter === 'marketing' ? 'Marketing (' + activeEmployees.filter(e => e.division === 'Marketing').length + ')' :
+                            employeeFilter === 'finance' ? 'Finance (' + activeEmployees.filter(e => e.division === 'Finance').length + ')' : 'Filter'
+                        "></span>
 
-                <!-- In Meeting -->
-                <button 
-                    type="button" 
-                    @click="employeeFilter = 'meeting'"
-                    :class="employeeFilter === 'meeting' ? 'bg-zinc-900 text-white font-semibold shadow-sm' : 'bg-white/75 hover:bg-white text-slate-600 hover:text-slate-900 border border-white/80 backdrop-blur-md shadow-xs'"
-                    class="px-4 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer"
-                >
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                    <span>In Meeting</span>
-                </button>
+                        <!-- Animated Chevron -->
+                        <svg 
+                            class="w-3.5 h-3.5 transition-transform duration-200" 
+                            :class="[
+                                filterDropdownOpen ? 'rotate-180' : '',
+                                employeeFilter !== 'all' ? 'text-white/70' : 'text-slate-400'
+                            ]"
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
 
-                <!-- Reviewing PR -->
-                <button 
-                    type="button" 
-                    @click="employeeFilter = 'review'"
-                    :class="employeeFilter === 'review' ? 'bg-zinc-900 text-white font-semibold shadow-sm' : 'bg-white/75 hover:bg-white text-slate-600 hover:text-slate-900 border border-white/80 backdrop-blur-md shadow-xs'"
-                    class="px-4 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer"
-                >
-                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-                    <span>Review PR</span>
-                </button>
+                    <!-- Dropdown Menu Panel -->
+                    <div 
+                        x-show="filterDropdownOpen" 
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                        x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                        x-cloak
+                        class="absolute right-0 top-full mt-2 w-60 bg-white/95 backdrop-blur-2xl border border-white/90 rounded-2xl shadow-xl shadow-slate-900/10 p-1.5 z-40 overflow-hidden"
+                    >
+                        <!-- Option: Semua -->
+                        <button 
+                            type="button" 
+                            @click="employeeFilter = 'all'; currentPage = 1; filterDropdownOpen = false"
+                            class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer group"
+                            :class="employeeFilter === 'all' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                        >
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3.5 h-3.5" :class="employeeFilter === 'all' ? 'text-white' : 'text-slate-400 group-hover:text-slate-700'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                </svg>
+                                <span>Tampilkan Semua</span>
+                            </div>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'all' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.length"></span>
+                        </button>
 
-                <!-- Tech -->
-                <button 
-                    type="button" 
-                    @click="employeeFilter = 'tech'"
-                    :class="employeeFilter === 'tech' ? 'bg-zinc-900 text-white font-semibold shadow-sm' : 'bg-white/75 hover:bg-white text-slate-600 hover:text-slate-900 border border-white/80 backdrop-blur-md shadow-xs'"
-                    class="px-4 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer"
-                >
-                    Tech
-                </button>
+                        <!-- Group Label: Status Aktivitas -->
+                        <div class="px-3 pt-2.5 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            Status Aktivitas
+                        </div>
 
-                <!-- Marketing -->
-                <button 
-                    type="button" 
-                    @click="employeeFilter = 'marketing'"
-                    :class="employeeFilter === 'marketing' ? 'bg-zinc-900 text-white font-semibold shadow-sm' : 'bg-white/75 hover:bg-white text-slate-600 hover:text-slate-900 border border-white/80 backdrop-blur-md shadow-xs'"
-                    class="px-4 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer"
-                >
-                    Marketing
-                </button>
+                        <!-- Option: Deep Work -->
+                        <button 
+                            type="button" 
+                            @click="employeeFilter = 'deep_work'; currentPage = 1; filterDropdownOpen = false"
+                            class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
+                            :class="employeeFilter === 'deep_work' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                        >
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                                <span>Deep Work</span>
+                            </div>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'deep_work' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.category === 'deep_work').length"></span>
+                        </button>
 
-                <!-- Finance -->
-                <button 
-                    type="button" 
-                    @click="employeeFilter = 'finance'"
-                    :class="employeeFilter === 'finance' ? 'bg-zinc-900 text-white font-semibold shadow-sm' : 'bg-white/75 hover:bg-white text-slate-600 hover:text-slate-900 border border-white/80 backdrop-blur-md shadow-xs'"
-                    class="px-4 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer"
-                >
-                    Finance
-                </button>
+                        <!-- Option: In Meeting -->
+                        <button 
+                            type="button" 
+                            @click="employeeFilter = 'meeting'; currentPage = 1; filterDropdownOpen = false"
+                            class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
+                            :class="employeeFilter === 'meeting' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                        >
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+                                <span>In Meeting</span>
+                            </div>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'meeting' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.category === 'meeting').length"></span>
+                        </button>
+
+                        <!-- Option: Review PR -->
+                        <button 
+                            type="button" 
+                            @click="employeeFilter = 'review'; currentPage = 1; filterDropdownOpen = false"
+                            class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
+                            :class="employeeFilter === 'review' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                        >
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500 shrink-0"></span>
+                                <span>Review PR</span>
+                            </div>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'review' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.category === 'review').length"></span>
+                        </button>
+
+                        <!-- Divider -->
+                        <div class="h-px bg-slate-100 my-1.5"></div>
+
+                        <!-- Group Label: Divisi Kantor -->
+                        <div class="px-3 pt-1 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                            Divisi Kantor
+                        </div>
+
+                        <!-- Option: Technology -->
+                        <button 
+                            type="button" 
+                            @click="employeeFilter = 'tech'; currentPage = 1; filterDropdownOpen = false"
+                            class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
+                            :class="employeeFilter === 'tech' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                        >
+                            <div class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
+                                <span>Technology</span>
+                            </div>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'tech' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Technology').length"></span>
+                        </button>
+
+                        <!-- Option: Marketing -->
+                        <button 
+                            type="button" 
+                            @click="employeeFilter = 'marketing'; currentPage = 1; filterDropdownOpen = false"
+                            class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
+                            :class="employeeFilter === 'marketing' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                        >
+                            <div class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
+                                <span>Marketing</span>
+                            </div>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'marketing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Marketing').length"></span>
+                        </button>
+
+                        <!-- Option: Finance -->
+                        <button 
+                            type="button" 
+                            @click="employeeFilter = 'finance'; currentPage = 1; filterDropdownOpen = false"
+                            class="w-full px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors text-left cursor-pointer"
+                            :class="employeeFilter === 'finance' ? 'bg-zinc-900 text-white font-semibold' : 'text-slate-700 hover:bg-slate-100'"
+                        >
+                            <div class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span>
+                                <span>Finance</span>
+                            </div>
+                            <span class="text-[11px] px-1.5 py-0.5 rounded-full" :class="employeeFilter === 'finance' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 font-mono'" x-text="activeEmployees.filter(e => e.division === 'Finance').length"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 8 Stepped Tab Cards Grid: Karyawan Aktif & Kegiatan (Frosted Glass Effect) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <template x-for="emp in filteredEmployees()" :key="emp.id">
+        <!-- Cards Grid: Karyawan Aktif & Kegiatan (Frosted Glass Effect - Max 20 per Page) -->
+        <div id="employeeGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <template x-for="emp in paginatedEmployees()" :key="emp.id">
                 <div class="relative flex flex-col group transition-all duration-200 hover:-translate-y-1">
                     <!-- Top Step Row: Left Profile Tab (Avatar + Name & Role) + Fillet + Recessed Action Notch -->
                     <div class="flex items-end relative z-10 -mb-px">
@@ -589,7 +798,23 @@
                             <!-- Employee Name & Role: Spacious & Comfortable -->
                             <div class="min-w-0 flex-1 pr-1">
                                 <h3 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate leading-snug" x-text="emp.name"></h3>
-                                <p class="text-xs text-slate-500 mt-0.5 leading-snug truncate" x-text="emp.role"></p>
+                                <div class="flex items-center gap-1.5 mt-0.5 min-w-0">
+                                    <p class="text-xs text-slate-500 leading-snug truncate" x-text="emp.role"></p>
+                                    <a 
+                                        x-show="emp.telegram"
+                                        :href="'https://t.me/' + emp.telegram" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        @click.stop
+                                        class="inline-flex items-center gap-0.5 text-[10px] font-bold text-[#229ED9] hover:text-[#1877a7] hover:underline shrink-0"
+                                        :title="'Buka Telegram @' + emp.telegram"
+                                    >
+                                        <span x-text="'@' + emp.telegram"></span>
+                                        <svg class="w-2.5 h-2.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
                         </div>
 
@@ -601,18 +826,20 @@
                             </svg>
                         </div>
 
-                        <!-- Notch Action Button: Chat / Hubungi Karyawan (Hover Green Micro-interaction) -->
+                        <!-- Notch Action Button: Direct Telegram Chat (Hover Green Micro-interaction) -->
                         <div class="w-14 shrink-0 flex items-center justify-end pb-3 pr-2.5 pl-1.5">
-                            <button 
-                                type="button" 
-                                @click="openChatWith(emp)"
+                            <a 
+                                :href="'https://t.me/' + (emp.telegram ? emp.telegram.replace('@', '') : '')"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                @click.stop
                                 class="w-10 h-10 rounded-full bg-white/85 hover:bg-emerald-500 backdrop-blur-md border border-white/90 hover:border-emerald-400 text-slate-700 hover:text-white flex items-center justify-center transition-all duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-emerald-500/30 active:scale-95 cursor-pointer shrink-0 shadow-xs group/btn"
-                                title="Chat / Hubungi Karyawan"
+                                :title="'Buka Telegram @' + (emp.telegram ? emp.telegram.replace('@', '') : '')"
                             >
                                 <svg class="w-5 h-5 transition-all duration-300 group-hover/btn:scale-110 group-hover/btn:-rotate-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
-                            </button>
+                            </a>
                         </div>
                     </div>
 
@@ -682,6 +909,95 @@
                     </div>
                 </div>
             </template>
+        </div>
+
+        <!-- Empty State (Jika tidak ada hasil filter / pencarian) -->
+        <div 
+            x-show="filteredEmployees().length === 0"
+            x-cloak
+            class="py-16 text-center rounded-3xl bg-white/60 backdrop-blur-md border border-white/80 p-8 shadow-xs"
+        >
+            <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mx-auto mb-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800">Tidak ada rekan kerja ditemukan</h4>
+            <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Tidak ditemukan karyawan yang cocok dengan filter atau kata kunci pencarian saat ini.</p>
+            <button 
+                type="button" 
+                @click="employeeFilter = 'all'; employeeSearch = ''; currentPage = 1"
+                class="mt-4 px-4 py-2 rounded-full bg-zinc-900 text-white text-xs font-semibold hover:bg-zinc-800 transition-all cursor-pointer shadow-xs"
+            >
+                Reset Semua Filter
+            </button>
+        </div>
+
+        <!-- Pagination Controls (Hanya muncul jika jumlah karyawan > 20) -->
+        <div 
+            x-show="filteredEmployees().length > perPage"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-y-2"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            x-cloak
+            class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 shadow-xs"
+        >
+            <!-- Info Text: Menampilkan X - Y dari Total -->
+            <div class="text-xs text-slate-600 font-medium">
+                Menampilkan 
+                <span class="font-bold text-slate-900 font-mono" x-text="((currentPage - 1) * perPage) + 1"></span>
+                -
+                <span class="font-bold text-slate-900 font-mono" x-text="Math.min(currentPage * perPage, filteredEmployees().length)"></span>
+                dari 
+                <span class="font-bold text-slate-900 font-mono" x-text="filteredEmployees().length"></span>
+                rekan kerja
+            </div>
+
+            <!-- Page Buttons (Prev, Numbers, Next) -->
+            <div class="flex items-center gap-1.5">
+                <!-- Tombol Sebelumnya -->
+                <button 
+                    type="button" 
+                    @click="goToPage(currentPage - 1)"
+                    :disabled="currentPage === 1"
+                    :class="currentPage === 1 ? 'opacity-40 cursor-not-allowed text-slate-400' : 'hover:bg-white text-slate-700 hover:text-slate-900 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95'"
+                    class="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white/80 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Sebelumnya</span>
+                </button>
+
+                <!-- Nomor Halaman -->
+                <div class="flex items-center gap-1">
+                    <template x-for="p in totalPages()" :key="p">
+                        <button 
+                            type="button" 
+                            @click="goToPage(p)"
+                            class="w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center font-mono"
+                            :class="currentPage === p 
+                                ? 'bg-zinc-900 text-white shadow-xs' 
+                                : 'bg-white/80 hover:bg-white text-slate-600 hover:text-slate-900 border border-slate-200 shadow-2xs active:scale-95'"
+                            x-text="p"
+                        ></button>
+                    </template>
+                </div>
+
+                <!-- Tombol Selanjutnya -->
+                <button 
+                    type="button" 
+                    @click="goToPage(currentPage + 1)"
+                    :disabled="currentPage === totalPages()"
+                    :class="currentPage === totalPages() ? 'opacity-40 cursor-not-allowed text-slate-400' : 'hover:bg-white text-slate-700 hover:text-slate-900 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95'"
+                    class="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white/80 text-xs font-semibold flex items-center gap-1.5 transition-all"
+                >
+                    <span>Selanjutnya</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
+            </div>
         </div>
     </section>
 
@@ -866,6 +1182,23 @@
                             <span class="text-slate-500">Kontak Internal:</span>
                             <span class="text-slate-700 font-mono" x-text="selectedEmployee.phone"></span>
                         </div>
+                        <div class="flex justify-between py-2 border-b border-slate-100" x-show="selectedEmployee.telegram">
+                            <span class="text-slate-500">Akun Telegram:</span>
+                            <a 
+                                :href="'https://t.me/' + selectedEmployee.telegram" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                class="text-[#229ED9] hover:underline font-bold flex items-center gap-1 font-mono text-xs"
+                            >
+                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.536-.196 1.006.128.832.942z"/>
+                                </svg>
+                                <span x-text="'@' + selectedEmployee.telegram"></span>
+                                <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
 
                     <!-- Modal Action Buttons -->
@@ -877,313 +1210,22 @@
                         >
                             Tutup
                         </button>
-                        <button 
-                            type="button" 
-                            @click="openChatWith(selectedEmployee); selectedEmployee = null" 
-                            class="px-5 py-2 rounded-full bg-zinc-900 hover:bg-zinc-800 text-white text-xs font-bold shadow-md cursor-pointer transition-all active:scale-95"
-                        >
-                            Hubungi Langsung
-                        </button>
+                        <template x-if="selectedEmployee.telegram">
+                            <a 
+                                :href="'https://t.me/' + selectedEmployee.telegram.replace('@', '')" 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                class="px-5 py-2 rounded-full bg-[#229ED9] hover:bg-[#1b87ba] text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                            >
+                                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.536-.196 1.006.128.832.942z"/>
+                                </svg>
+                                <span>Hubungi via Telegram ↗</span>
+                            </a>
+                        </template>
                     </div>
                 </div>
             </template>
         </div>
     </div>
-
-    <!-- ============================================================== -->
-    <!-- FLOATING MODERN CHAT PANEL (Bottom Right - Expandable & Collapsible) -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- FLOATING MODERN CHAT PANEL (Bottom Right - Expandable & Collapsible) -->
-    <!-- ============================================================== -->
-    <div 
-        :class="chatMaximized 
-            ? 'fixed inset-0 z-50 p-2 sm:p-5 md:p-8 flex items-center justify-center bg-slate-900/40 backdrop-blur-md pointer-events-auto' 
-            : 'fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-auto'"
-    >
-        <!-- 1. EXPANDED CHAT PANEL WINDOW -->
-        <div 
-            x-show="chatPanelOpen" 
-            x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0 translate-y-6 scale-95"
-            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-            x-transition:leave="transition ease-in duration-200"
-            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-            x-transition:leave-end="opacity-0 translate-y-6 scale-95"
-            x-cloak
-            :class="chatMaximized 
-                ? 'w-full h-full max-w-6xl max-h-none mb-0 rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.30)]' 
-                : 'w-[360px] sm:w-[400px] h-[540px] max-h-[85vh] rounded-3xl mb-3 shadow-[0_20px_50px_rgba(0,0,0,0.18)]'"
-            class="bg-white/95 backdrop-blur-2xl border border-white/80 flex flex-col overflow-hidden transition-all duration-300"
-        >
-            <!-- Panel Header -->
-            <div class="px-4 py-3 bg-white/90 border-b border-slate-200/70 flex items-center justify-between shrink-0">
-                <!-- Left Info (Employee info OR Inbox Title) -->
-                <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                    <template x-if="chatActiveEmployee && !chatMaximized">
-                        <div class="flex items-center gap-2.5 min-w-0">
-                            <button 
-                                type="button" 
-                                @click="chatActiveEmployee = null" 
-                                class="p-1 -ml-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                                title="Kembali ke Daftar Pesan"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                            <div class="relative shrink-0">
-                                <img :src="chatActiveEmployee.avatar" :alt="chatActiveEmployee.name" class="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-500/30">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white absolute bottom-0 right-0"></span>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <h4 class="text-xs sm:text-base font-bold text-slate-900 truncate leading-tight" x-text="chatActiveEmployee.name"></h4>
-                                <p class="text-[10px] text-emerald-600 font-medium truncate flex items-center gap-1 mt-0.5">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-                                    <span x-text="chatActiveEmployee.role"></span>
-                                </p>
-                            </div>
-                        </div>
-                    </template>
-                    <template x-if="chatActiveEmployee && chatMaximized">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-xs">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-900 leading-tight">Workspace Team Chat</h4>
-                                <p class="text-[10px] text-slate-500 font-medium leading-tight mt-0.5">Direct Communication Hub</p>
-                            </div>
-                        </div>
-                    </template>
-                    <template x-if="!chatActiveEmployee">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-xs">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="text-xs sm:text-sm font-bold text-slate-900 leading-tight">Team Messages</h4>
-                                <p class="text-[10px] text-slate-500 font-medium leading-tight mt-0.5">8 Karyawan Terhubung</p>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-
-                <!-- Right Controls: Maximize / Restore & Collapse Down -->
-                <div class="flex items-center gap-1.5 shrink-0">
-                    <!-- Maximize / Restore Toggle Button (Replaces X button) -->
-                    <button 
-                        type="button" 
-                        @click="chatMaximized = !chatMaximized" 
-                        class="w-7 h-7 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
-                        :title="chatMaximized ? 'Restore / Perkecil' : 'Maximize / Layar Penuh'"
-                    >
-                        <template x-if="!chatMaximized">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                            </svg>
-                        </template>
-                        <template x-if="chatMaximized">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 14h6m0 0v6m0-6L3 21m17-7h-6m0 0v6m0-6l7 7M4 10h6m0 0V4m0 6L3 3m17 7h-6m0 0V4m0 6l7-7" />
-                            </svg>
-                        </template>
-                    </button>
-
-                    <!-- Down Arrow (Collapse / Hide Panel to floating pill) -->
-                    <button 
-                        type="button" 
-                        @click="chatPanelOpen = false; chatMaximized = false" 
-                        class="w-7 h-7 rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
-                        title="Collapse / Sembunyikan"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Panel Body (Flex Dual-Pane when Maximized, Single-Pane when Popup) -->
-            <div class="flex-1 flex min-h-0 overflow-hidden">
-                <!-- Left Sidebar: Employee List (Always visible when chatMaximized; OR visible when !chatMaximized && !chatActiveEmployee) -->
-                <div 
-                    x-show="chatMaximized || (!chatMaximized && !chatActiveEmployee)"
-                    :class="chatMaximized ? 'w-72 sm:w-80 border-r border-slate-200/70 flex flex-col bg-white/70 shrink-0' : 'flex-1 flex flex-col min-h-0 bg-slate-50/50'"
-                >
-                    <!-- Search Box -->
-                    <div class="p-3 bg-white border-b border-slate-200/70 shrink-0">
-                        <div class="relative">
-                            <input 
-                                type="text" 
-                                x-model="chatSearch" 
-                                placeholder="Cari rekan kerja..." 
-                                class="w-full bg-slate-100/90 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-800 placeholder-slate-400 border border-slate-200 focus:bg-white focus:outline-none focus:border-zinc-800"
-                            >
-                            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Employee Conversations List -->
-                    <div class="flex-1 overflow-y-auto divide-y divide-slate-100">
-                        <template x-for="emp in activeEmployees.filter(e => e.name.toLowerCase().includes(chatSearch.toLowerCase()) || e.role.toLowerCase().includes(chatSearch.toLowerCase()))" :key="emp.id">
-                            <div 
-                                @click="openChatWith(emp)" 
-                                class="p-3 hover:bg-white flex items-center gap-3 cursor-pointer transition-colors group"
-                                :class="chatMaximized && chatActiveEmployee && chatActiveEmployee.id === emp.id ? 'bg-white shadow-xs border-l-4 border-l-emerald-600' : ''"
-                            >
-                                <div class="relative shrink-0">
-                                    <img :src="emp.avatar" :alt="emp.name" class="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-2xs">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white absolute bottom-0 right-0"></span>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <div class="flex items-center justify-between mb-0.5">
-                                        <h5 class="text-xs font-bold text-slate-900 truncate group-hover:text-emerald-700 transition-colors" x-text="emp.name"></h5>
-                                        <span class="text-[10px] text-slate-400" x-text="emp.online_duration"></span>
-                                    </div>
-                                    <p class="text-[11px] text-slate-500 truncate" x-text="chatConversations[emp.id] ? chatConversations[emp.id][chatConversations[emp.id].length - 1].text : emp.current_activity"></p>
-                                </div>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-
-                <!-- Right Pane: Active Chat Conversation -->
-                <div 
-                    x-show="chatActiveEmployee || (chatMaximized && !chatActiveEmployee)"
-                    class="flex-1 flex flex-col min-h-0 bg-slate-50/50"
-                >
-                    <template x-if="chatActiveEmployee">
-                        <div class="flex-1 flex flex-col min-h-0">
-                            <!-- Context Pill: Current Task / Live Activity -->
-                            <div class="px-4 py-2.5 bg-slate-100/80 border-b border-slate-200/60 flex items-center justify-between gap-2 shrink-0">
-                                <div class="flex items-center gap-2 min-w-0">
-                                    <div class="relative shrink-0" x-show="chatMaximized">
-                                        <img :src="chatActiveEmployee.avatar" :alt="chatActiveEmployee.name" class="w-8 h-8 rounded-full object-cover ring-2 ring-emerald-500/30">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white absolute bottom-0 right-0"></span>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <h4 class="text-xs font-bold text-slate-900 truncate leading-tight" x-show="chatMaximized" x-text="chatActiveEmployee.name"></h4>
-                                        <div class="flex items-center gap-1.5 min-w-0 mt-0.5">
-                                            <span class="w-2 h-2 rounded-full shrink-0" :class="{
-                                                'bg-emerald-500': chatActiveEmployee.category === 'deep_work',
-                                                'bg-amber-500': chatActiveEmployee.category === 'meeting',
-                                                'bg-indigo-500': chatActiveEmployee.category === 'review'
-                                            }"></span>
-                                            <span class="text-[11px] font-semibold text-slate-600 truncate" x-text="'Sedang Mengerjakan: ' + chatActiveEmployee.current_activity"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 shrink-0">
-                                    <span class="text-[10px] font-mono text-slate-400" x-text="chatActiveEmployee.online_duration"></span>
-                                    <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-white text-slate-600 border border-slate-200/80 shadow-2xs" x-text="chatActiveEmployee.status_label"></span>
-                                </div>
-                            </div>
-
-                            <!-- Chat Messages Scroll Area -->
-                            <div id="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5">
-                                <template x-for="(msg, idx) in (chatConversations[chatActiveEmployee.id] || [])" :key="idx">
-                                    <div class="flex flex-col" :class="msg.sender === 'me' ? 'items-end' : 'items-start'">
-                                        <div 
-                                            class="max-w-[85%] sm:max-w-[70%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-2xs"
-                                            :class="msg.sender === 'me' 
-                                                ? 'bg-zinc-900 text-white rounded-br-xs' 
-                                                : 'bg-white text-slate-800 border border-slate-200/80 rounded-bl-xs'"
-                                            x-text="msg.text"
-                                        ></div>
-                                        <span class="text-[9px] text-slate-400 mt-1 px-1" x-text="msg.time"></span>
-                                    </div>
-                                </template>
-                            </div>
-
-                            <!-- Chat Input Bar -->
-                            <div class="p-3 bg-white border-t border-slate-200/70 flex items-center gap-2.5 shrink-0">
-                                <input 
-                                    id="chatInputField"
-                                    type="text" 
-                                    x-model="chatInputMessage" 
-                                    @keydown.enter.prevent="sendChatMessage()"
-                                    :placeholder="'Ketik pesan untuk ' + chatActiveEmployee.name.split(' ')[0] + '...'"
-                                    class="flex-1 bg-slate-100/80 hover:bg-slate-100 focus:bg-white border border-slate-200 focus:border-emerald-500 rounded-full px-4 py-2 text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
-                                >
-                                <button 
-                                    type="button" 
-                                    @click="sendChatMessage()" 
-                                    class="w-9 h-9 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center shrink-0 shadow-xs cursor-pointer active:scale-95 transition-all"
-                                    title="Kirim Pesan"
-                                >
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h14M12 5l7 7-7 7" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </template>
-
-                    <template x-if="!chatActiveEmployee && chatMaximized">
-                        <div class="flex-1 flex flex-col items-center justify-center p-8 text-center text-slate-400">
-                            <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3">
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                            </div>
-                            <h4 class="text-sm font-bold text-slate-700">Pilih Rekan Kerja</h4>
-                            <p class="text-xs text-slate-500 mt-1 max-w-xs">Klik salah satu karyawan di daftar sebelah kiri untuk memulai obrolan langsung.</p>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. COLLAPSED FLOATING BADGE / CAPSULE BUTTON -->
-        <div 
-            x-show="!chatMaximized"
-            @click="chatPanelOpen = !chatPanelOpen"
-            class="bg-white/90 hover:bg-white backdrop-blur-2xl border border-white/80 shadow-xl shadow-slate-300/40 rounded-full py-2 px-3.5 flex items-center gap-2.5 cursor-pointer transition-all hover:scale-105 active:scale-95 group select-none"
-            title="Buka Panel Chat"
-        >
-            <!-- Icon Chat with Pulsing Live Dot -->
-            <div class="w-8 h-8 rounded-full bg-zinc-900 text-white flex items-center justify-center shrink-0 shadow-xs relative">
-                <svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white absolute -top-0.5 -right-0.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                </span>
-            </div>
-
-            <!-- Capsule Label -->
-            <div class="flex items-center gap-2">
-                <template x-if="chatActiveEmployee && !chatPanelOpen">
-                    <div class="flex items-center gap-1.5 max-w-[150px]">
-                        <span class="text-xs font-bold text-slate-900 truncate" x-text="'Chat: ' + chatActiveEmployee.name.split(' ')[0]"></span>
-                    </div>
-                </template>
-                <template x-if="!chatActiveEmployee || chatPanelOpen">
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-bold text-slate-900 tracking-tight">Direct Messages</span>
-                        <span class="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">8</span>
-                    </div>
-                </template>
-            </div>
-
-            <!-- Expand / Collapse Chevron Indicator -->
-            <svg 
-                class="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-transform duration-200" 
-                :class="chatPanelOpen ? 'rotate-180' : ''"
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-            >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
-            </svg>
-        </div>
-    </div>
-
 </div>

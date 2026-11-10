@@ -55,6 +55,20 @@
                 <input type="text" id="phone" name="phone" value="{{ old('phone', $employee->phone) }}" placeholder="contoh: 0812-3456-7890" class="w-full px-4 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
 
+            <!-- Telegram Username -->
+            <div>
+                <label for="telegram_username" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                    Username Telegram
+                </label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 font-bold text-sm">
+                        @
+                    </span>
+                    <input type="text" id="telegram_username" name="telegram_username" value="{{ old('telegram_username', ltrim($employee->telegram_username ?? '', '@')) }}" placeholder="contoh: MuhammadFauzil" class="w-full pl-8 pr-4 py-2.5 rounded-xl text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#229ED9]">
+                </div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Digunakan untuk direct chat profil via Telegram (https://t.me/username).</p>
+            </div>
+
             <!-- Address -->
             <div>
                 <label for="address" class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">

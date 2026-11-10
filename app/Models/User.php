@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password',
         'avatar',
         'phone',
+        'telegram_username',
         'position',
         'division_id',
         'supervisor_id',
@@ -238,5 +239,19 @@ class User extends Authenticatable
         $encodedName = urlencode($this->name);
 
         return "https://ui-avatars.com/api/?name={$encodedName}&background=0284c7&color=ffffff&bold=true";
+    }
+
+    /**
+     * Get direct Telegram chat link.
+     */
+    public function telegramUrl(): ?string
+    {
+        if (! $this->telegram_username) {
+            return null;
+        }
+
+        $clean = ltrim($this->telegram_username, '@');
+
+        return "https://t.me/{$clean}";
     }
 }

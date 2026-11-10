@@ -17,6 +17,7 @@ class UserService
      *     name: string,
      *     email?: string,
      *     phone?: ?string,
+     *     telegram_username?: ?string,
      *     address?: ?string,
      * }  $data
      */
@@ -25,6 +26,7 @@ class UserService
         $payload = [
             'name' => $data['name'],
             'phone' => $data['phone'] ?? null,
+            'telegram_username' => isset($data['telegram_username']) ? ltrim($data['telegram_username'], '@') : null,
             'address' => $data['address'] ?? null,
         ];
 
