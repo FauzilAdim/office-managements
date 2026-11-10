@@ -14,11 +14,6 @@
         <span class="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
             {{ $task->assignee?->division?->name ?? ($task->assignee?->division?->code ?? 'TECH') }}
         </span>
-        @if($task->isOverdue())
-            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200/60">
-                Lewat Deadline
-            </span>
-        @endif
     </div>
 
     <!-- Judul Tugas Bold (1-2 baris) -->
@@ -45,17 +40,17 @@
             @endif
         </div>
 
-        <!-- Badge Prioritas Kecil Rounded-Full di Kanan (Warna Soft: merah muda=Tinggi, kuning muda=Sedang, abu=Rendah) -->
+        <!-- Badge Prioritas Kecil Rounded-Full di Kanan (Consistent with Workspace Palette) -->
         @if(in_array($task->priority->value, ['high', 'urgent'], true))
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200/80 dark:border-rose-900/40">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                 Tinggi
             </span>
         @elseif($task->priority->value === 'medium')
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400 border border-amber-200/80 dark:border-amber-900/40">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
                 Sedang
             </span>
         @else
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-zinc-50 text-zinc-500 dark:bg-zinc-850 dark:text-zinc-500 border border-zinc-200/60 dark:border-zinc-800">
                 Rendah
             </span>
         @endif
@@ -82,15 +77,15 @@
             </span>
         </div>
 
-        <!-- Tag Deadline Kecil di Kanan (misal "Besok" / "26 Sep") -->
+        <!-- Tag Deadline Kecil di Kanan (Consistent with Workspace Palette) -->
         <div class="text-[10px] font-medium">
             @php
                 $isToday = $task->deadline->isToday();
                 $isTomorrow = $task->deadline->isTomorrow();
             @endphp
             @if($task->isOverdue())
-                <span class="text-rose-600 dark:text-rose-400 font-semibold flex items-center space-x-1">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span class="text-zinc-500 dark:text-zinc-400 flex items-center space-x-1" title="Tenggat: {{ $task->deadline->format('d M Y') }}">
+                    <svg class="w-3 h-3 text-zinc-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span>{{ $task->deadline->format('d M') }}</span>

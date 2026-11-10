@@ -49,7 +49,7 @@
                 Prioritas: {{ $task->priority->label() }}
             </span>
             @if($task->isOverdue())
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-500 text-white shadow-sm shadow-rose-500/20">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                     <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -262,7 +262,7 @@
 
                 <div>
                     <span class="text-[11px] text-slate-400 block">Batas Waktu (Deadline):</span>
-                    <span class="text-xs font-bold {{ $task->isOverdue() ? 'text-rose-500' : 'text-slate-800 dark:text-slate-200' }}">
+                    <span class="text-xs font-bold {{ $task->isOverdue() ? 'text-amber-600 dark:text-amber-400' : 'text-slate-800 dark:text-slate-200' }}">
                         {{ $task->deadline->translatedFormat('l, d F Y - H:i') }}
                     </span>
                 </div>
