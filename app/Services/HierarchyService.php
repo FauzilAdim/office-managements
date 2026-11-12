@@ -16,7 +16,7 @@ class HierarchyService
      */
     public function getAssignableUsers(User $user): Collection
     {
-        if ($user->isDirector()) {
+        if ($user->isDirector() || $user->isManager()) {
             return User::query()
                 ->where('id', '!=', $user->id)
                 ->where('is_active', true)
@@ -25,17 +25,7 @@ class HierarchyService
                 ->get();
         }
 
-        if ($user->isVP()) {
-            return User::query()
-                ->where('id', '!=', $user->id)
-                ->where('division_id', $user->division_id)
-                ->where('is_active', true)
-                ->with(['division', 'roles'])
-                ->orderBy('name')
-                ->get();
-        }
-
-        if ($user->isManager() || $user->isTeamLead()) {
+        if ($user->isTeamLead()) {
             $subordinateIds = $user->allSubordinateIds();
 
             return User::query()
@@ -56,32 +46,24 @@ class HierarchyService
      */
     public function getVisibleUsers(User $user): Collection
     {
-        if ($user->isDirector()) {
+        if ($user->isDirector() || $user->isManager()) {
             return User::query()
-                ->with(['division', 'roles', 'supervisor'])
+                ->with(['division', 'roles', 'supervisor', 'assignedTasks'])
                 ->orderBy('name')
                 ->get();
         }
 
-        if ($user->isVP()) {
-            return User::query()
-                ->where('division_id', $user->division_id)
-                ->with(['division', 'roles', 'supervisor'])
-                ->orderBy('name')
-                ->get();
-        }
-
-        if ($user->isManager() || $user->isTeamLead()) {
+        if ($user->isTeamLead()) {
             $subordinateIds = array_merge([$user->id], $user->allSubordinateIds());
 
             return User::query()
                 ->whereIn('id', $subordinateIds)
-                ->with(['division', 'roles', 'supervisor'])
+                ->with(['division', 'roles', 'supervisor', 'assignedTasks'])
                 ->orderBy('name')
                 ->get();
         }
 
-        return new Collection([$user->load(['division', 'roles', 'supervisor'])]);
+        return new Collection([$user->load(['division', 'roles', 'supervisor', 'assignedTasks'])]);
     }
 
     /**
@@ -90,18 +72,14 @@ class HierarchyService
     public function canAssignTo(User $assigner, User $target): bool
     {
         if ($assigner->id === $target->id) {
-            return true; // Self-assigned task
-        }
-
-        if ($assigner->isDirector()) {
             return true;
         }
 
-        if ($assigner->isVP()) {
-            return $target->division_id === $assigner->division_id;
+        if ($assigner->isDirector() || $assigner->isManager()) {
+            return true;
         }
 
-        if ($assigner->isManager() || $assigner->isTeamLead()) {
+        if ($assigner->isTeamLead()) {
             return in_array($target->id, $assigner->allSubordinateIds(), true);
         }
 
@@ -115,7 +93,6 @@ class HierarchyService
      */
     public function buildOrganizationTree(): array
     {
-        // Root users are users without supervisors (usually Director)
         $rootUsers = User::query()
             ->whereNull('supervisor_id')
             ->where('is_active', true)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
@@ -27,6 +28,16 @@ Route::middleware('auth')->group(function () {
 
     // Project Management
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+    Route::post('/projects/{project}/members', [ProjectController::class, 'assignMember'])->name('projects.members.assign');
+    Route::delete('/projects/{project}/members/{member}', [ProjectController::class, 'removeMember'])->name('projects.members.remove');
+
+    // Milestone Management
+    Route::post('/projects/{project}/milestones', [MilestoneController::class, 'store'])->name('milestones.store');
+    Route::patch('/milestones/{milestone}', [MilestoneController::class, 'update'])->name('milestones.update');
+    Route::delete('/milestones/{milestone}', [MilestoneController::class, 'destroy'])->name('milestones.destroy');
 
     // Task Management
     Route::resource('tasks', TaskController::class);

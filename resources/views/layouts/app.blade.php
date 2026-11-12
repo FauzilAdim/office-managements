@@ -317,10 +317,9 @@
                 @php
                     $demoAccounts = [
                         ['email' => 'direktur@office.com', 'role' => 'Direktur', 'name' => 'Budi Pratama, M.B.A.', 'desc' => 'Akses penuh seluruh perusahaan & semua level'],
-                        ['email' => 'vp.tech@office.com', 'role' => 'VP', 'name' => 'Ir. Hendra Gunawan', 'desc' => 'Divisi Teknologi (Manager, Lead, Staff TECH)'],
-                        ['email' => 'manager.it@office.com', 'role' => 'Manager', 'name' => 'Reza Rahadian, S.Kom', 'desc' => 'Kelola Team Lead & Staff IT'],
-                        ['email' => 'lead.dev@office.com', 'role' => 'Team Lead', 'name' => 'Fauzil Adzim', 'desc' => 'Bisa buat & assign tugas ke Staff dev'],
-                        ['email' => 'staff.dev1@office.com', 'role' => 'Staff', 'name' => 'Ahmad Fikri', 'desc' => 'Hanya lihat & update tugas miliknya'],
+                        ['email' => 'manager.it@office.com', 'role' => 'Manager', 'name' => 'Reza Rahadian, S.Kom', 'desc' => 'Akses penuh (sama seperti Direktur) kelola project & tim'],
+                        ['email' => 'lead.dev@office.com', 'role' => 'Team Lead', 'name' => 'Fauzil Adzim, S.Tr.Kom.', 'desc' => 'Kelola project yang di-assign & breakdown milestone/task'],
+                        ['email' => 'staff.dev1@office.com', 'role' => 'Staff', 'name' => 'Ahmad Fikri', 'desc' => 'Hanya lihat & kerjakan tugas yang di-assign ke dia'],
                     ];
                 @endphp
 
@@ -337,57 +336,6 @@
                                 <p class="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">{{ $demo['desc'] }}</p>
                             </div>
                             <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </form>
-                @endforeach
-            </div>
-        </div>
-    </div>
-
-</body>
-</html>
-
-
-
-    <!-- Quick Role Switcher Modal -->
-    <div x-show="quickSwitchOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div @click="quickSwitchOpen = false" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
-
-        <div class="relative bg-white/95 backdrop-blur-xl rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 z-10 overflow-hidden text-slate-900">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-                <div>
-                    <h3 class="text-base font-bold text-slate-900">Ganti Akun Demo (Testing Peran)</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Uji coba otorisasi & tampilan peran dalam sistem</p>
-                </div>
-                <button @click="quickSwitchOpen = false" class="text-slate-400 hover:text-slate-700 p-1 text-lg font-bold cursor-pointer">&times;</button>
-            </div>
-
-            <div class="mt-4 space-y-2.5 max-h-96 overflow-y-auto pr-1">
-                @php
-                    $demoAccounts = [
-                        ['email' => 'direktur@office.com', 'role' => 'Direktur', 'name' => 'Budi Pratama, M.B.A.', 'desc' => 'Akses penuh seluruh perusahaan & semua level'],
-                        ['email' => 'vp.tech@office.com', 'role' => 'VP', 'name' => 'Ir. Hendra Gunawan', 'desc' => 'Divisi Teknologi (Manager, Lead, Staff TECH)'],
-                        ['email' => 'manager.it@office.com', 'role' => 'Manager', 'name' => 'Reza Rahadian, S.Kom', 'desc' => 'Kelola Team Lead & Staff IT'],
-                        ['email' => 'lead.dev@office.com', 'role' => 'Team Lead', 'name' => 'Fauzil Adzim', 'desc' => 'Bisa buat & assign tugas ke Staff dev'],
-                        ['email' => 'staff.dev1@office.com', 'role' => 'Staff', 'name' => 'Ahmad Fikri', 'desc' => 'Hanya lihat & update tugas miliknya'],
-                    ];
-                @endphp
-
-                @foreach($demoAccounts as $demo)
-                    <form action="{{ route('quick-login') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="email" value="{{ $demo['email'] }}">
-                        <button type="submit" class="w-full text-left p-3.5 rounded-2xl border border-slate-200 bg-slate-50/80 hover:border-slate-300 hover:bg-white transition-all duration-150 flex items-center justify-between group cursor-pointer shadow-xs">
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-xs text-slate-900 group-hover:text-blue-600">{{ $demo['name'] }}</span>
-                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700">{{ $demo['role'] }}</span>
-                                </div>
-                                <p class="text-[11px] text-slate-500 mt-1">{{ $demo['desc'] }}</p>
-                            </div>
-                            <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </button>

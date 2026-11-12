@@ -24,19 +24,13 @@ class DashboardController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        if ($user->isDirector()) {
+        if ($user->hasFullAccess()) {
             $data = $this->dashboardService->getDirectorDashboardData();
 
             return view('dashboard.director', $data);
         }
 
-        if ($user->isVP()) {
-            $data = $this->dashboardService->getVpDashboardData($user);
-
-            return view('dashboard.vp', $data);
-        }
-
-        if ($user->isManager() || $user->isTeamLead()) {
+        if ($user->isTeamLead()) {
             $data = $this->dashboardService->getManagerDashboardData($user);
 
             return view('dashboard.manager', $data);

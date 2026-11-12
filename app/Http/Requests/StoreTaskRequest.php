@@ -30,6 +30,8 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
+            'project_id' => ['nullable', 'exists:projects,id'],
+            'milestone_id' => ['nullable', 'exists:milestones,id'],
             'description' => ['nullable', 'string'],
             'deadline' => ['required', 'date'],
             'priority' => ['required', Rule::in(['low', 'medium', 'high', 'urgent'])],

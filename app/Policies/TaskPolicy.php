@@ -22,7 +22,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        if ($user->isDirector()) {
+        if ($user->hasFullAccess()) {
             return true;
         }
 
@@ -30,11 +30,7 @@ class TaskPolicy
             return true;
         }
 
-        if ($user->isVP()) {
-            return $task->assignee?->division_id === $user->division_id;
-        }
-
-        if ($user->isManager() || $user->isTeamLead()) {
+        if ($user->isTeamLead()) {
             $subordinates = $user->allSubordinateIds();
 
             return in_array($task->assigned_to, $subordinates, true);
@@ -48,7 +44,6 @@ class TaskPolicy
      */
     public function create(User $user): bool
     {
-        // Staff cannot assign tasks; Team Lead, Manager, VP, Director can
         return ! $user->isStaff();
     }
 
@@ -57,7 +52,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): bool
     {
-        if ($user->isDirector()) {
+        if ($user->hasFullAccess()) {
             return true;
         }
 
@@ -65,11 +60,7 @@ class TaskPolicy
             return true;
         }
 
-        if ($user->isVP() && $task->assignee?->division_id === $user->division_id) {
-            return true;
-        }
-
-        if ($user->isManager() && in_array($task->assigned_to, $user->allSubordinateIds(), true)) {
+        if ($user->isTeamLead() && in_array($task->assigned_to, $user->allSubordinateIds(), true)) {
             return true;
         }
 
@@ -85,15 +76,11 @@ class TaskPolicy
             return true;
         }
 
-        if ($user->isDirector()) {
+        if ($user->hasFullAccess()) {
             return true;
         }
 
-        if ($user->isVP() && $task->assignee?->division_id === $user->division_id) {
-            return true;
-        }
-
-        if (($user->isManager() || $user->isTeamLead()) && in_array($task->assigned_to, $user->allSubordinateIds(), true)) {
+        if ($user->isTeamLead() && in_array($task->assigned_to, $user->allSubordinateIds(), true)) {
             return true;
         }
 
@@ -105,6 +92,6 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task): bool
     {
-        return $user->isDirector() || $user->id === $task->assigned_by;
+        return $user->hasFullAccess() || $user->id === $task->assigned_by;
     }
 }

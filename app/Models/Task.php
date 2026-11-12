@@ -20,6 +20,8 @@ class Task extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'project_id',
+        'milestone_id',
         'title',
         'description',
         'deadline',
@@ -45,6 +47,26 @@ class Task extends Model
             'status' => TaskStatus::class,
             'progress' => 'integer',
         ];
+    }
+
+    /**
+     * The project this task belongs to.
+     *
+     * @return BelongsTo<Project, $this>
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * The milestone this task belongs to.
+     *
+     * @return BelongsTo<Milestone, $this>
+     */
+    public function milestone(): BelongsTo
+    {
+        return $this->belongsTo(Milestone::class);
     }
 
     /**

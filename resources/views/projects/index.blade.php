@@ -89,15 +89,16 @@
         <div class="flex items-center gap-3">
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-zinc-100 uppercase">PROJECTS</h1>
             
-            <!-- + New Project Button -->
-            <button 
-                type="button" 
-                @click="newProjectModalOpen = true"
-                class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
-            >
-                <span class="text-sm leading-none">+</span>
-                <span>New Project</span>
-            </button>
+            @if($canCreate)
+                <!-- + New Project Button -->
+                <a 
+                    href="{{ route('projects.create') }}" 
+                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer ml-1"
+                >
+                    <span class="text-sm leading-none">+</span>
+                    <span>New Project</span>
+                </a>
+            @endif
         </div>
 
         <!-- Project Stat Counters -->
@@ -267,12 +268,12 @@
 
                     <!-- Project Title & Division -->
                     <div class="mb-3">
-                        <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-zinc-100 group-hover:text-black dark:group-hover:text-white leading-snug tracking-tight" x-text="prj.name"></h2>
+                        <a :href="'/projects/' + prj.id" class="text-base sm:text-lg font-bold text-slate-900 dark:text-zinc-100 hover:text-indigo-600 dark:hover:text-indigo-400 leading-snug tracking-tight block transition-colors" x-text="prj.name"></a>
                         <p class="text-xs text-slate-500 dark:text-zinc-400 mt-1 flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
-                            <span x-text="prj.division"></span>
+                            <span x-text="prj.division ? prj.division : (prj.category ? prj.category.toUpperCase() : 'HQ')"></span>
                         </p>
                     </div>
 
@@ -346,20 +347,12 @@
                                     <div class="flex items-center gap-2.5 min-w-0">
                                         <!-- Avatar with Online Dot -->
                                         <div class="relative shrink-0">
-                                            <img :src="m.avatar" :alt="m.name" class="w-8 h-8 rounded-full object-cover ring-1 ring-white/90 dark:ring-zinc-700">
-                                            <template x-if="m.is_online">
-                                                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-zinc-800"></span>
-                                            </template>
+                                            <img :src="m.avatar_url || m.avatar" :alt="m.name" class="w-8 h-8 rounded-full object-cover ring-1 ring-white/90 dark:ring-zinc-700">
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <h4 class="text-xs font-bold text-slate-900 dark:text-zinc-100 truncate leading-snug" x-text="m.name"></h4>
-                                            <p class="text-[10px] text-slate-500 dark:text-zinc-400 truncate" x-text="m.role"></p>
+                                            <p class="text-[10px] text-slate-500 dark:text-zinc-400 truncate" x-text="m.pivot ? m.pivot.role : 'Member'"></p>
                                         </div>
-                                    </div>
-
-                                    <!-- Specific Task in this Project -->
-                                    <div class="text-right shrink-0 max-w-[130px]">
-                                        <span class="text-[10px] font-medium text-slate-600 dark:text-zinc-300 bg-slate-100 dark:bg-zinc-700/60 px-2 py-0.5 rounded-full block truncate" x-text="m.task"></span>
                                     </div>
                                 </div>
                             </template>
@@ -392,17 +385,16 @@
                 <div class="pt-3.5 border-t border-slate-200/50 dark:border-zinc-800/60 flex items-center justify-between">
                     <span class="text-[11px] text-slate-400 dark:text-zinc-500 font-medium" x-text="'Budget: ' + prj.budget"></span>
 
-                    <!-- Detail Project Modal Trigger Button -->
-                    <button 
-                        type="button" 
-                        @click="selectedProject = prj"
-                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-white shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                    <!-- Detail Project Page Link -->
+                    <a 
+                        :href="'/projects/' + prj.id"
+                        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100 text-white shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
                     >
                         <span>Detail Project</span>
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </template>

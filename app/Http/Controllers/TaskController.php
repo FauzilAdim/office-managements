@@ -37,12 +37,9 @@ class TaskController extends Controller
 
         $query = Task::query()->with(['assignee.division', 'creator'])->withCount('logs');
 
-        if ($user->isDirector()) {
-            // Full access: see all tasks
-        } elseif ($user->isVP()) {
-            // Tasks in VP's division
-            $query->whereHas('assignee', fn (Builder $q) => $q->where('division_id', $user->division_id));
-        } elseif ($user->isManager() || $user->isTeamLead()) {
+        if ($user->hasFullAccess()) {
+            // Full access: see all tasks (Direktur & Manager)
+        } elseif ($user->isTeamLead()) {
             // Tasks assigned to self or subordinates
             $visibleUserIds = array_merge([$user->id], $user->allSubordinateIds());
             $query->whereIn('assigned_to', $visibleUserIds);

@@ -1,0 +1,12 @@
+node_modules
+vendor
+.git
+.github
+.env
+.env.*
+!.env.example
+database/database.sqlite
+storage/*.key
+.phpunit.cache
+.editorconfig
+README.md

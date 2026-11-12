@@ -17,15 +17,11 @@ class UserPolicy
             return true;
         }
 
-        if ($currentUser->isDirector()) {
+        if ($currentUser->hasFullAccess()) {
             return true;
         }
 
-        if ($currentUser->isVP()) {
-            return $targetUser->division_id === $currentUser->division_id;
-        }
-
-        if ($currentUser->isManager() || $currentUser->isTeamLead()) {
+        if ($currentUser->isTeamLead()) {
             return in_array($targetUser->id, $currentUser->allSubordinateIds(), true);
         }
 
@@ -41,6 +37,6 @@ class UserPolicy
      */
     public function update(User $currentUser, User $targetUser): bool
     {
-        return $currentUser->id === $targetUser->id || $currentUser->isDirector();
+        return $currentUser->id === $targetUser->id || $currentUser->hasFullAccess();
     }
 }

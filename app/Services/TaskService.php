@@ -38,6 +38,8 @@ class TaskService
                 : TaskPriority::Medium;
 
             $task = Task::create([
+                'project_id' => isset($data['project_id']) && $data['project_id'] ? (int) $data['project_id'] : null,
+                'milestone_id' => isset($data['milestone_id']) && $data['milestone_id'] ? (int) $data['milestone_id'] : null,
                 'title' => $data['title'],
                 'description' => $data['description'] ?? null,
                 'deadline' => $data['deadline'],
@@ -49,6 +51,10 @@ class TaskService
                 'started_at' => $status === TaskStatus::InProgress ? now() : null,
                 'completed_at' => $status === TaskStatus::Completed ? now() : null,
             ]);
+
+            if ($task->project_id) {
+                $task->project?->recalculateProgress();
+            }
 
             TaskLog::create([
                 'task_id' => $task->id,

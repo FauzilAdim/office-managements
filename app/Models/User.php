@@ -9,6 +9,7 @@ use App\Enums\TaskStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -45,6 +46,21 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /**
+     * @var list<string>
+     */
+    protected $appends = [
+        'avatar_url',
+    ];
+
+    /**
+     * Accessor for avatar URL.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        return $this->avatarUrl();
+    }
 
     /**
      * @return array<string, string>
@@ -110,6 +126,28 @@ class User extends Authenticatable
     }
 
     /**
+     * Projects this user is a member of.
+     *
+     * @return BelongsToMany<Project, $this>
+     */
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_members')
+            ->withPivot(['role', 'assigned_by'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Projects created by this user.
+     *
+     * @return HasMany<Project, $this>
+     */
+    public function ownedProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'created_by');
+    }
+
+    /**
      * Audit logs created by this user.
      *
      * @return HasMany<TaskLog, $this>
@@ -142,15 +180,11 @@ class User extends Authenticatable
             TaskStatus::Review->value,
         ]);
 
-        if ($this->isDirector()) {
+        if ($this->isDirector() || $this->isManager()) {
             return $query->count();
         }
 
-        if ($this->isVP()) {
-            return $query->whereHas('assignee', fn ($q) => $q->where('division_id', $this->division_id))->count();
-        }
-
-        if ($this->isManager() || $this->isTeamLead()) {
+        if ($this->isTeamLead()) {
             $visibleUserIds = array_merge([$this->id], $this->allSubordinateIds());
 
             return $query->whereIn('assigned_to', $visibleUserIds)->count();
@@ -196,14 +230,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is VP.
-     */
-    public function isVP(): bool
-    {
-        return $this->hasRole(RoleEnum::VicePresident->value);
-    }
-
-    /**
      * Check if user is Manager.
      */
     public function isManager(): bool
@@ -225,6 +251,14 @@ class User extends Authenticatable
     public function isStaff(): bool
     {
         return $this->hasRole(RoleEnum::Staff->value);
+    }
+
+    /**
+     * Check if user has full admin access (Direktur or Manager).
+     */
+    public function hasFullAccess(): bool
+    {
+        return $this->isDirector() || $this->isManager();
     }
 
     /**

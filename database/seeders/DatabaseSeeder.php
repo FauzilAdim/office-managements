@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\ProjectCategory;
+use App\Enums\ProjectStatus;
 use App\Enums\RoleEnum;
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use App\Models\Division;
+use App\Models\Milestone;
+use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskLog;
 use App\Models\User;
@@ -23,10 +27,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Roles
+        // 1. Roles (4 Roles: Director, Manager, Team Lead, Staff)
         $roles = [
             RoleEnum::Director->value,
-            RoleEnum::VicePresident->value,
             RoleEnum::Manager->value,
             RoleEnum::TeamLead->value,
             RoleEnum::Staff->value,
@@ -70,6 +73,7 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'Managing Director / CEO',
             'phone' => '0812-3456-7890',
+            'telegram_username' => 'BudiPratama',
             'address' => 'Sudirman Central Business District (SCBD) Tower A Lt. 28, Jakarta Selatan',
             'join_date' => Carbon::parse('2020-01-15'),
             'division_id' => null, // Head Office
@@ -78,60 +82,18 @@ class DatabaseSeeder extends Seeder
         ]);
         $director->assignRole(RoleEnum::Director->value);
 
-        // 4. Vice Presidents (Level 2 - report to Director)
-        $vpTech = User::create([
-            'name' => 'Ir. Hendra Gunawan, M.T.',
-            'email' => 'vp.tech@office.com',
-            'password' => $defaultPassword,
-            'position' => 'Vice President of Technology',
-            'phone' => '0812-9876-5432',
-            'address' => 'Jl. Senopati Raya No. 42, Kebayoran Baru, Jakarta Selatan',
-            'join_date' => Carbon::parse('2021-03-01'),
-            'division_id' => $tech->id,
-            'supervisor_id' => $director->id,
-            'is_active' => true,
-        ]);
-        $vpTech->assignRole(RoleEnum::VicePresident->value);
-
-        $vpMkt = User::create([
-            'name' => 'Siti Nurhaliza, S.E., M.M.',
-            'email' => 'vp.marketing@office.com',
-            'password' => $defaultPassword,
-            'position' => 'Vice President of Marketing',
-            'phone' => '0813-1122-3344',
-            'address' => 'Jl. Kemang Timur No. 18, Jakarta Selatan',
-            'join_date' => Carbon::parse('2021-06-15'),
-            'division_id' => $mkt->id,
-            'supervisor_id' => $director->id,
-            'is_active' => true,
-        ]);
-        $vpMkt->assignRole(RoleEnum::VicePresident->value);
-
-        $vpFin = User::create([
-            'name' => 'Drs. Bambang Wijaya, Ak.',
-            'email' => 'vp.finance@office.com',
-            'password' => $defaultPassword,
-            'position' => 'Vice President of Finance',
-            'phone' => '0811-5566-7788',
-            'address' => 'Jl. Rasuna Said Kav. C-11, Jakarta Selatan',
-            'join_date' => Carbon::parse('2021-09-01'),
-            'division_id' => $fin->id,
-            'supervisor_id' => $director->id,
-            'is_active' => true,
-        ]);
-        $vpFin->assignRole(RoleEnum::VicePresident->value);
-
-        // 5. Managers (Level 3 - report to VPs)
+        // 4. Managers (Level 2 - report directly to Director)
         $managerTech = User::create([
             'name' => 'Reza Rahadian, S.Kom.',
             'email' => 'manager.it@office.com',
             'password' => $defaultPassword,
             'position' => 'Software Engineering Manager',
             'phone' => '0821-4455-6677',
+            'telegram_username' => 'RezaRahadian',
             'address' => 'Jl. Tebet Barat Raya No. 85, Jakarta Selatan',
             'join_date' => Carbon::parse('2022-01-10'),
             'division_id' => $tech->id,
-            'supervisor_id' => $vpTech->id,
+            'supervisor_id' => $director->id,
             'is_active' => true,
         ]);
         $managerTech->assignRole(RoleEnum::Manager->value);
@@ -142,21 +104,38 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'Brand & Campaign Manager',
             'phone' => '0822-7788-9900',
+            'telegram_username' => 'DianSastro',
             'address' => 'Jl. Cipete Raya No. 12, Cilandak, Jakarta Selatan',
             'join_date' => Carbon::parse('2022-04-01'),
             'division_id' => $mkt->id,
-            'supervisor_id' => $vpMkt->id,
+            'supervisor_id' => $director->id,
             'is_active' => true,
         ]);
         $managerMkt->assignRole(RoleEnum::Manager->value);
 
-        // 6. Team Leads (Level 4 - report to Managers)
+        $managerFin = User::create([
+            'name' => 'Drs. Bambang Wijaya, Ak.',
+            'email' => 'manager.finance@office.com',
+            'password' => $defaultPassword,
+            'position' => 'Finance & Operations Manager',
+            'phone' => '0811-5566-7788',
+            'telegram_username' => 'BambangWijaya',
+            'address' => 'Jl. Rasuna Said Kav. C-11, Jakarta Selatan',
+            'join_date' => Carbon::parse('2021-09-01'),
+            'division_id' => $fin->id,
+            'supervisor_id' => $director->id,
+            'is_active' => true,
+        ]);
+        $managerFin->assignRole(RoleEnum::Manager->value);
+
+        // 5. Team Leads (Level 3 - report to Managers)
         $leadDev = User::create([
             'name' => 'Fauzil Adzim, S.Tr.Kom.',
             'email' => 'lead.dev@office.com',
             'password' => $defaultPassword,
             'position' => 'Technical Lead / Senior Architect',
             'phone' => '0857-1234-5678',
+            'telegram_username' => 'MuhammadFauzil',
             'address' => 'Jl. Boulevard Kelapa Gading Blok LA No. 5, Jakarta Utara',
             'join_date' => Carbon::parse('2022-08-15'),
             'division_id' => $tech->id,
@@ -171,6 +150,7 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'QA & Automation Lead',
             'phone' => '0858-9876-5432',
+            'telegram_username' => 'AnisaMaharani',
             'address' => 'Jl. Bintaro Utama Sektor 9 No. 24, Tangerang Selatan',
             'join_date' => Carbon::parse('2022-10-01'),
             'division_id' => $tech->id,
@@ -185,6 +165,7 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'Digital Campaign Lead',
             'phone' => '0819-3344-5566',
+            'telegram_username' => 'RianSantoso',
             'address' => 'Jl. Pejaten Barat No. 14, Pasar Minggu, Jakarta Selatan',
             'join_date' => Carbon::parse('2023-02-15'),
             'division_id' => $mkt->id,
@@ -193,13 +174,14 @@ class DatabaseSeeder extends Seeder
         ]);
         $leadMkt->assignRole(RoleEnum::TeamLead->value);
 
-        // 7. Staff (Level 5 - report to Team Leads)
+        // 6. Staff (Level 4 - report to Team Leads)
         $staffDev1 = User::create([
             'name' => 'Ahmad Fikri',
             'email' => 'staff.dev1@office.com',
             'password' => $defaultPassword,
             'position' => 'Backend Developer (Laravel & Go)',
             'phone' => '0878-1122-3344',
+            'telegram_username' => 'AhmadFikri',
             'address' => 'Jl. Cempaka Putih Tengah No. 21, Jakarta Pusat',
             'join_date' => Carbon::parse('2023-05-01'),
             'division_id' => $tech->id,
@@ -214,6 +196,7 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'Frontend Developer (Tailwind & Vue)',
             'phone' => '0877-5566-7788',
+            'telegram_username' => 'CitraLestari',
             'address' => 'Jl. Radio Dalam Raya No. 36, Kebayoran Baru, Jakarta Selatan',
             'join_date' => Carbon::parse('2023-06-15'),
             'division_id' => $tech->id,
@@ -228,6 +211,7 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'QA Automation & Tester',
             'phone' => '0896-1234-9988',
+            'telegram_username' => 'BayuSetiawan',
             'address' => 'Jl. Margonda Raya No. 102, Depok',
             'join_date' => Carbon::parse('2023-08-01'),
             'division_id' => $tech->id,
@@ -242,6 +226,7 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'Creative Content & Copywriter',
             'phone' => '0895-7788-9900',
+            'telegram_username' => 'DewiAnggraini',
             'address' => 'Jl. Bangka Raya No. 45, Mampang Prapatan, Jakarta Selatan',
             'join_date' => Carbon::parse('2023-09-10'),
             'division_id' => $mkt->id,
@@ -256,6 +241,7 @@ class DatabaseSeeder extends Seeder
             'password' => $defaultPassword,
             'position' => 'SEO & Paid Ads Specialist',
             'phone' => '0815-4433-2211',
+            'telegram_username' => 'DimasPratama',
             'address' => 'Jl. Duren Tiga No. 8, Pancoran, Jakarta Selatan',
             'join_date' => Carbon::parse('2023-11-01'),
             'division_id' => $mkt->id,
@@ -264,9 +250,146 @@ class DatabaseSeeder extends Seeder
         ]);
         $staffMkt2->assignRole(RoleEnum::Staff->value);
 
-        // 8. Realistic Tasks & Task Logs
+        // 7. Seed Projects
+        // Project 1: Core Banking & Payment Gateway (Assigned to Fauzil - Lead Dev)
+        $p1 = Project::create([
+            'name' => 'Core Banking API & QRIS Payment Gateway',
+            'code' => 'PRJ-TECH-01',
+            'description' => 'Integrasi gateway transaksi QRIS dinamis multi-bank, settlement otomatis, dan webhook callback dengan enkripsi HMAC SHA-256.',
+            'category' => ProjectCategory::Tech->value,
+            'status' => ProjectStatus::InProgress->value,
+            'priority' => 'urgent',
+            'progress' => 65,
+            'deadline' => Carbon::now()->addDays(20),
+            'budget' => 'Rp 250.000.000',
+            'tech_stack' => ['Laravel 12', 'PostgreSQL', 'Redis', 'Docker', 'Midtrans'],
+            'created_by' => $managerTech->id,
+        ]);
+        $p1->members()->attach([
+            $managerTech->id => ['role' => 'Project Sponsor / Manager', 'assigned_by' => $director->id],
+            $leadDev->id => ['role' => 'Tech Lead & Architect', 'assigned_by' => $managerTech->id],
+            $staffDev1->id => ['role' => 'Backend Engineer', 'assigned_by' => $leadDev->id],
+            $staffDev2->id => ['role' => 'Frontend Engineer', 'assigned_by' => $leadDev->id],
+        ]);
+
+        // Milestones for Project 1
+        $m1_1 = Milestone::create([
+            'project_id' => $p1->id,
+            'title' => 'Arsitektur Webhook & Sandbox Midtrans',
+            'description' => 'Setup boilerplate callback handler, HMAC verification, dan routing sandbox.',
+            'status' => 'completed',
+            'due_date' => Carbon::now()->subDays(5),
+            'sort_order' => 1,
+            'created_by' => $leadDev->id,
+        ]);
+
+        $m1_2 = Milestone::create([
+            'project_id' => $p1->id,
+            'title' => 'Simulator Checkout & Modul Frontend',
+            'description' => 'Redesain checkout page dan integrasi QRIS display modal secara responsif.',
+            'status' => 'in_progress',
+            'due_date' => Carbon::now()->addDays(5),
+            'sort_order' => 2,
+            'created_by' => $leadDev->id,
+        ]);
+
+        $m1_3 = Milestone::create([
+            'project_id' => $p1->id,
+            'title' => 'Audit Keamanan & Penetrasi Production',
+            'description' => 'Security review rate limiting, JWT token expiry, dan deployment live cluster.',
+            'status' => 'pending',
+            'due_date' => Carbon::now()->addDays(20),
+            'sort_order' => 3,
+            'created_by' => $leadDev->id,
+        ]);
+
+        // Project 2: Omnichannel Marketing Campaign (Assigned to Rian - Lead Campaign)
+        $p2 = Project::create([
+            'name' => 'Omnichannel Digital Marketing Campaign Q3',
+            'code' => 'PRJ-MKT-01',
+            'description' => 'Kampanye terpadu meningkatkan akuisisi user lewat Google Ads, Meta Ads, dan konten edukasi media sosial.',
+            'category' => ProjectCategory::Marketing->value,
+            'status' => ProjectStatus::InProgress->value,
+            'priority' => 'high',
+            'progress' => 45,
+            'deadline' => Carbon::now()->addDays(30),
+            'budget' => 'Rp 150.000.000',
+            'tech_stack' => ['Google Ads', 'Meta Business', 'Figma', 'TikTok Ads'],
+            'created_by' => $managerMkt->id,
+        ]);
+        $p2->members()->attach([
+            $managerMkt->id => ['role' => 'Marketing Manager', 'assigned_by' => $director->id],
+            $leadMkt->id => ['role' => 'Digital Campaign Lead', 'assigned_by' => $managerMkt->id],
+            $staffMkt1->id => ['role' => 'Content Creator', 'assigned_by' => $leadMkt->id],
+            $staffMkt2->id => ['role' => 'SEO & Ads Specialist', 'assigned_by' => $leadMkt->id],
+        ]);
+
+        $m2_1 = Milestone::create([
+            'project_id' => $p2->id,
+            'title' => 'Produksi Aset Visual & Storyboard Video',
+            'description' => 'Menyusun script reel dan carousel edukasi produk.',
+            'status' => 'in_progress',
+            'due_date' => Carbon::now()->addDays(7),
+            'sort_order' => 1,
+            'created_by' => $leadMkt->id,
+        ]);
+
+        $m2_2 = Milestone::create([
+            'project_id' => $p2->id,
+            'title' => 'Optimasi SEO & Peluncuran Kampanye Iklan',
+            'description' => 'On-page SEO dan setup campaign conversion tracking.',
+            'status' => 'pending',
+            'due_date' => Carbon::now()->addDays(25),
+            'sort_order' => 2,
+            'created_by' => $leadMkt->id,
+        ]);
+
+        // Project 3: QA Automation & Performance Testing (Assigned to Anisa - QA Lead)
+        $p3 = Project::create([
+            'name' => 'Sistem Otomasi QA & Performance Benchmark',
+            'code' => 'PRJ-TECH-02',
+            'description' => 'Framework automated testing regression suite dan load testing hingga 10.000 concurrent user.',
+            'category' => ProjectCategory::Tech->value,
+            'status' => ProjectStatus::Planning->value,
+            'priority' => 'medium',
+            'progress' => 30,
+            'deadline' => Carbon::now()->addDays(40),
+            'budget' => 'Rp 80.000.000',
+            'tech_stack' => ['Pest PHP', 'k6', 'Grafana', 'Docker'],
+            'created_by' => $director->id,
+        ]);
+        $p3->members()->attach([
+            $director->id => ['role' => 'Managing Director', 'assigned_by' => $director->id],
+            $managerTech->id => ['role' => 'Engineering Manager', 'assigned_by' => $director->id],
+            $leadQA->id => ['role' => 'QA Lead & Architect', 'assigned_by' => $director->id],
+            $staffQA1->id => ['role' => 'Automation Tester', 'assigned_by' => $leadQA->id],
+        ]);
+
+        $m3_1 = Milestone::create([
+            'project_id' => $p3->id,
+            'title' => 'Automated Regression Test Suite',
+            'description' => 'Testing otomatis untuk flow checkout dan payment callback.',
+            'status' => 'in_progress',
+            'due_date' => Carbon::now()->addDays(10),
+            'sort_order' => 1,
+            'created_by' => $leadQA->id,
+        ]);
+
+        $m3_2 = Milestone::create([
+            'project_id' => $p3->id,
+            'title' => 'Stress Testing 10.000 Concurrent User',
+            'description' => 'Benchmark P95 latency dan simulasi lonjakan traffic.',
+            'status' => 'pending',
+            'due_date' => Carbon::now()->addDays(30),
+            'sort_order' => 2,
+            'created_by' => $leadQA->id,
+        ]);
+
+        // 8. Seed Tasks linked to Projects & Milestones
         // Task 1: In Progress by Ahmad Fikri (assigned by Fauzil Adzim)
         $t1 = Task::create([
+            'project_id' => $p1->id,
+            'milestone_id' => $m1_1->id,
             'title' => 'Integrasi Payment Gateway QRIS & BCA Virtual Account',
             'description' => 'Implementasi webhook callback verifikasi pembayaran otomatis dengan enkripsi HMAC SHA256 serta penanganan idempotency key pada checkout.',
             'deadline' => Carbon::now()->addDays(2)->setHour(17)->setMinute(0),
@@ -311,6 +434,8 @@ class DatabaseSeeder extends Seeder
 
         // Task 2: In Review by Citra Lestari (assigned by Fauzil Adzim)
         $t2 = Task::create([
+            'project_id' => $p1->id,
+            'milestone_id' => $m1_2->id,
             'title' => 'Redesain UI Checkout Page & Optimasi Mobile Responsiveness',
             'description' => 'Memperbaiki layout ringkasan pesanan, menambahkan validasi kode kupon real-time, dan memastikan load time di bawah 1 detik.',
             'deadline' => Carbon::now()->addDay()->setHour(18)->setMinute(0),
@@ -345,6 +470,8 @@ class DatabaseSeeder extends Seeder
 
         // Task 3: In Progress by Dewi Anggraini (assigned by Rian Santoso)
         $t3 = Task::create([
+            'project_id' => $p2->id,
+            'milestone_id' => $m2_1->id,
             'title' => 'Produksi Konten Video Edukasi & Carousel Instagram Produk Baru',
             'description' => 'Menyusun 5 naskah reel Instagram dan storyboard visual untuk peluncuran fitur baru di kuartal ketiga.',
             'deadline' => Carbon::now()->addDays(3)->setHour(15)->setMinute(0),
@@ -367,15 +494,17 @@ class DatabaseSeeder extends Seeder
             'created_at' => Carbon::now()->subHours(3),
         ]);
 
-        // Task 4: Completed Task by Ahmad Fikri (assigned by Hendra Gunawan - VP)
+        // Task 4: Completed Task by Ahmad Fikri (assigned by Reza Rahadian - Manager)
         $t4 = Task::create([
+            'project_id' => $p1->id,
+            'milestone_id' => $m1_3->id,
             'title' => 'Audit Keamanan & Penetrasi Testing API Autentikasi',
             'description' => 'Melakukan security profiling terhadap rate limiting, JWT token expiry, dan vulnerability injection pada public endpoints.',
             'deadline' => Carbon::now()->subDay()->setHour(12)->setMinute(0),
             'priority' => TaskPriority::Urgent,
             'status' => TaskStatus::Completed,
             'progress' => 100,
-            'assigned_by' => $vpTech->id,
+            'assigned_by' => $managerTech->id,
             'assigned_to' => $staffDev1->id,
             'started_at' => Carbon::now()->subDays(4),
             'completed_at' => Carbon::now()->subDays(1),
@@ -387,19 +516,21 @@ class DatabaseSeeder extends Seeder
             'to_status' => 'completed',
             'from_progress' => 90,
             'to_progress' => 100,
-            'note' => 'Hasil report penetration testing telah disetujui VP Tech tanpa ada temuan critical.',
+            'note' => 'Hasil report penetration testing telah disetujui Engineering Manager tanpa ada temuan critical.',
             'created_at' => Carbon::now()->subDays(1),
         ]);
 
-        // Task 5: Overdue Task by Bayu Setiawan (assigned by Reza Rahadian - Manager)
+        // Task 5: In Progress Task by Bayu Setiawan (assigned by Anisa Maharani)
         $t5 = Task::create([
+            'project_id' => $p3->id,
+            'milestone_id' => $m3_2->id,
             'title' => 'Setup Stress Testing 10.000 Concurrent Users dengan K6',
             'description' => 'Melakukan benchmarking server beban puncak dan mencatat response time latency persentil 95 (P95).',
             'deadline' => Carbon::now()->subDays(1)->setHour(18)->setMinute(0), // OVERDUE
             'priority' => TaskPriority::Urgent,
             'status' => TaskStatus::InProgress,
             'progress' => 50,
-            'assigned_by' => $managerTech->id,
+            'assigned_by' => $leadQA->id,
             'assigned_to' => $staffQA1->id,
             'started_at' => Carbon::now()->subDays(2),
             'completed_at' => null,
@@ -411,12 +542,14 @@ class DatabaseSeeder extends Seeder
             'to_status' => 'in_progress',
             'from_progress' => 0,
             'to_progress' => 50,
-            'note' => 'Script k6 telah dibuat, terkendala koneksi staging cluster.',
+            'note' => 'Script k6 telah dibuat, sedang dikalibrasi di cluster staging.',
             'created_at' => Carbon::now()->subDays(2),
         ]);
 
         // Task 6: Completed Task by Dimas Pratama (assigned by Dian Sastrowardoyo)
         $t6 = Task::create([
+            'project_id' => $p2->id,
+            'milestone_id' => $m2_2->id,
             'title' => 'Optimasi On-Page SEO Artikel Blog & Peningkatan PageSpeed Score',
             'description' => 'Menyesuaikan meta tag, schema markup Article, dan kompresi gambar WebP untuk 20 artikel teratas.',
             'deadline' => Carbon::now()->subDays(2)->setHour(17)->setMinute(0),
@@ -431,6 +564,8 @@ class DatabaseSeeder extends Seeder
 
         // Task 7: Pending Task by Citra Lestari (assigned by Fauzil Adzim)
         $t7 = Task::create([
+            'project_id' => $p1->id,
+            'milestone_id' => $m1_2->id,
             'title' => 'Implementasi Dark Mode Switcher & Simpan Preference di LocalStorage',
             'description' => 'Memastikan seluruh komponen Blade dan Tailwind mendukung tema gelap yang elegan dan kontras tinggi.',
             'deadline' => Carbon::now()->addDays(5)->setHour(18)->setMinute(0),
@@ -445,6 +580,8 @@ class DatabaseSeeder extends Seeder
 
         // Task 8: In Review by Bayu Setiawan (assigned by Anisa Maharani)
         $t8 = Task::create([
+            'project_id' => $p3->id,
+            'milestone_id' => $m3_1->id,
             'title' => 'Automated Regression Test Suite untuk Modul Transaksi & Pembayaran',
             'description' => 'Membuat 40 skenario end-to-end testing menggunakan Pest PHP dan Laravel Dusk.',
             'deadline' => Carbon::now()->addDay()->setHour(16)->setMinute(0),
@@ -459,6 +596,8 @@ class DatabaseSeeder extends Seeder
 
         // Task 9: In Progress by Dimas Pratama (assigned by Rian Santoso)
         $t9 = Task::create([
+            'project_id' => $p2->id,
+            'milestone_id' => $m2_2->id,
             'title' => 'Setup Google Ads Search & Display Retargeting Campaign Q3',
             'description' => 'Konfigurasi conversion tracking pixel, penentuan target cost per click (CPC), dan A/B testing ad copy.',
             'deadline' => Carbon::now()->addDays(4)->setHour(17)->setMinute(0),
@@ -473,6 +612,8 @@ class DatabaseSeeder extends Seeder
 
         // Task 10: Assigned by Director directly to Lead Dev (Fauzil)
         $t10 = Task::create([
+            'project_id' => $p1->id,
+            'milestone_id' => $m1_1->id,
             'title' => 'Arsitektur Single Sign-On (SSO) & Integrasi Multi-Cabang',
             'description' => 'Desain arsitektur otentikasi sentral untuk menghubungkan sistem kantor pusat dan 5 kantor operasional regional.',
             'deadline' => Carbon::now()->addDays(7)->setHour(17)->setMinute(0),
