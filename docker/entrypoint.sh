@@ -6,6 +6,14 @@ PORT=${PORT:-80}
 sed -i "s/listen 80;/listen ${PORT};/g" /etc/nginx/http.d/default.conf
 sed -i "s/listen \[::\]:80;/listen [::]:${PORT};/g" /etc/nginx/http.d/default.conf
 
+cd /var/www/html
+
+# Setup environment file if not exists
+if [ ! -f .env ]; then
+    cp .env.example .env
+    chmod 666 .env
+fi
+
 # Setup SQLite if using sqlite
 if [ "${DB_CONNECTION:-sqlite}" = "sqlite" ]; then
     mkdir -p /var/www/html/database
@@ -21,12 +29,9 @@ mkdir -p /var/www/html/storage/framework/sessions \
          /var/www/html/bootstrap/cache
 chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Run Laravel setup commands
-cd /var/www/html
-
 # Generate key if not set
 if [ -z "$APP_KEY" ]; then
-    echo "Warning: APP_KEY is empty. Generating temporary key..."
+    echo "Warning: APP_KEY is empty. Generating key..."
     php artisan key:generate --force
 fi
 
@@ -43,4 +48,3 @@ php artisan view:cache
 
 echo "Office Management ready! Starting Nginx and PHP-FPM on port ${PORT}..."
 exec /usr/bin/supervisord -c /etc/supervisord.conf
-

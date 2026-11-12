@@ -46,6 +46,7 @@ COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
+RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
 
 # Set working directory
 WORKDIR /var/www/html
