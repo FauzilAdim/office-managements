@@ -13,3 +13,4 @@ services:
         value: sqlite
       - key: APP_KEY
         generateValue: true
+

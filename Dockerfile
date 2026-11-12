@@ -45,7 +45,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 # Set working directory
 WORKDIR /var/www/html
@@ -66,3 +66,4 @@ RUN mkdir -p storage bootstrap/cache database \
 EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
+

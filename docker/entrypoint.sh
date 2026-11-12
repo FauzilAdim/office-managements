@@ -43,3 +43,4 @@ php artisan view:cache
 
 echo "Office Management ready! Starting Nginx and PHP-FPM on port ${PORT}..."
 exec /usr/bin/supervisord -c /etc/supervisord.conf
+
