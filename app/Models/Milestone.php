@@ -82,4 +82,3 @@ class Milestone extends Model
         return (int) round(($completed / $total) * 100);
     }
 }
-

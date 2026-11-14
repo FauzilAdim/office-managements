@@ -83,4 +83,3 @@ class MilestoneController extends Controller
             ->with('success', "Milestone '{$title}' berhasil dihapus.");
     }
 }
-

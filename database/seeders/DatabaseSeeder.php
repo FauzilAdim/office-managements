@@ -27,6 +27,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        if (User::where('email', 'direktur@office.com')->exists()) {
+            $this->command?->info('Database already seeded. Skipping seeder.');
+
+            return;
+        }
+
         // 1. Roles (4 Roles: Director, Manager, Team Lead, Staff)
         $roles = [
             RoleEnum::Director->value,

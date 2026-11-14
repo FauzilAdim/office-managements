@@ -77,4 +77,3 @@ class ProjectPolicy
         return $user->hasFullAccess();
     }
 }
-
